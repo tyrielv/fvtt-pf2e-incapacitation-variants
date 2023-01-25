@@ -15,7 +15,7 @@ Open Game License:
 Project Licensing:
 
 * Everything in this project that is not covered by one of the following license exceptions is made available under the
-  Apache License (see [LICENSE](LICENSE)).
+  MIT License (see [LICENSE](LICENSE)).
 
 Virtual Table Top Platform Licenses:
 
