@@ -1,0 +1,72 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "lib": [
+      "esnext",
+      "dom",
+      "dom.iterable"
+    ],
+    "module": "CommonJS",
+    "noEmit": true,
+    "noFallthroughCasesInSwitch": true,
+    "noImplicitOverride": true,
+    "noImplicitAny": true,
+    "noImplicitReturns": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "outDir": "dist",
+    "paths": {
+      "@actor": [
+        "types/src/module/actor"
+      ],
+      "@actor/*": [
+        "types/src/module/actor/*"
+      ],
+      "@item": [
+        "types/src/module/item"
+      ],
+      "@item/*": [
+        "types/src/module/item/*"
+      ],
+      "@module/*": [
+        "types/src/module/*"
+      ],
+      "@scene": [
+        "types/src/module/scene"
+      ],
+      "@scene/*": [
+        "types/src/module/scene/*"
+      ],
+      "@scripts/*": [
+        "types/src/scripts/*"
+      ],
+      "@system/*": [
+        "types/src/module/system/*"
+      ],
+      "@util": [
+        "types/src/util"
+      ],
+      "@util/*": [
+        "types/src/util/*"
+      ],
+    },
+    "removeComments": false,
+    "resolveJsonModule": true,
+    "skipLibCheck": true,
+    "sourceMap": true,
+    "strictBindCallApply": true,
+    "strictFunctionTypes": true,
+    "strictNullChecks": true,
+    "strictPropertyInitialization": true,
+    "target": "es2018",
+    "typeRoots": [
+      "node_modules/@types",
+      "types/types/foundry"
+    ],
+    "types": [
+      "jquery",
+    ]
+  }
+}

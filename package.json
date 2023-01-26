@@ -1,0 +1,54 @@
+{
+  "private": "true",
+  "name": "fvtt-pf2e-incapacitation-variants",
+  "version": "0.0.1",
+  "description": "Automation for several house rule variants of the Incapacitation trait for Pathfinder 2nd Edition in Foundry VTT",
+  "license": "./LICENSE",
+  "homepage": "https://github.com/tyrielv/fvtt-pf2e-incapacitation-variants#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tyrielv/fvtt-pf2e-incapacitation-variants.git"
+  },
+  "author": "Tyrie Vella",
+  "bugs": {
+    "url": "https://github.com/tyrielv/fvtt-pf2e-incapacitation-variants/issues"
+  },
+  "scripts": {
+    "build": "webpack --mode production",
+    "build:dev": "npm run && webpack",
+    "start": "webpack serve --hot",
+    "clean": "rm -rf dist/*",
+    "lint": "eslint ./src --ext .ts",
+    "lint:fix": "eslint ./src --ext .ts --fix",
+    "docs": "typedoc"
+  },
+  "lint-staged": {
+    "*.(ts)": "eslint --fix",
+    "*.(json|scss)": "prettier --write"
+  },
+  "devDependencies": {
+    "@types/copy-webpack-plugin": "^10.1.0",
+    "@types/fs-extra": "^11.0.1",
+    "@types/jquery": "^3.5.16",
+    "@types/node": "^18.11.18",
+    "@typescript-eslint/eslint-plugin": "^5.49.0",
+    "@typescript-eslint/parser": "^5.49.0",
+    "copy-webpack-plugin": "^11.0.0",
+    "eslint": "^8.32.0",
+    "eslint-config-prettier": "^8.6.0",
+    "eslint-import-resolver-typescript": "^3.5.3",
+    "eslint-plugin-import": "^2.27.5",
+    "eslint-plugin-prettier": "^4.2.1",
+    "fork-ts-checker-webpack-plugin": "^7.3.0",
+    "fs-extra": "^11.1.0",
+    "prettier": "^2.8.3",
+    "simple-progress-webpack-plugin": "^2.0.0",
+    "thread-loader": "^3.0.4",
+    "ts-loader": "^9.4.2",
+    "ts-node": "^10.9.1",
+    "typedoc": "^0.23.24",
+    "webpack-cli": "^5.0.1",
+    "webpack-dev-server": "^4.11.1",
+    "webpack-import-glob-loader": "^1.6.3"
+  }
+}

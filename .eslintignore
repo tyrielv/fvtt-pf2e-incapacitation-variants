@@ -1,0 +1,11 @@
+# IDE
+node_modules/
+dist/
+.cs/
+/.vscode
+/node_modules
+
+# This Project
+foundryconfig.json
+.eslintrc.js
+submodules/
