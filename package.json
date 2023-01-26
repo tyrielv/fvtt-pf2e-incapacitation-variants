@@ -1,7 +1,7 @@
 {
   "private": "true",
   "name": "fvtt-pf2e-incapacitation-variants",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "Automation for several house rule variants of the Incapacitation trait for Pathfinder 2nd Edition in Foundry VTT",
   "license": "./LICENSE",
   "homepage": "https://github.com/tyrielv/fvtt-pf2e-incapacitation-variants#readme",
@@ -27,6 +27,12 @@
     "*.(json|scss)": "prettier --write"
   },
   "devDependencies": {
+    "@semantic-release/changelog": "^6.0.2",
+    "@semantic-release/commit-analyzer": "^9.0.2",
+    "@semantic-release/exec": "^6.0.3",
+    "@semantic-release/git": "^10.0.1",
+    "@semantic-release/github": "^8.0.7",
+    "@semantic-release/release-notes-generator": "^10.0.3",
     "@types/copy-webpack-plugin": "^10.1.0",
     "@types/fs-extra": "^11.0.1",
     "@types/jquery": "^3.5.16",
@@ -41,7 +47,9 @@
     "eslint-plugin-prettier": "^4.2.1",
     "fork-ts-checker-webpack-plugin": "^7.3.0",
     "fs-extra": "^11.1.0",
+    "lint-staged": "^13.1.0",
     "prettier": "^2.8.3",
+    "semantic-release": "^19.0.5",
     "simple-progress-webpack-plugin": "^2.0.0",
     "thread-loader": "^3.0.4",
     "ts-loader": "^9.4.2",

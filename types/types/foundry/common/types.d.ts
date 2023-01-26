@@ -45,7 +45,7 @@ declare global {
         /** For string Types, defines the allowable values */
         choices?: TChoices;
         /** For numeric Types, defines the allowable range */
-        range?: this["type"] extends NumberConstructor ? { min: number; max: number; step: number } : never;
+        range?: { min: number; max: number; step: number };
         /** The default value */
         default: number | string | boolean | object | Function;
         /** Executes when the value of this Setting changes */

@@ -1,5 +1,40 @@
 {
   "fvtt-pf2e-incapacitation-variants": {
-
+    "SETTINGS": {
+      "ApplicationBasis": {
+        "name": "Apply incapacitation",
+        "hint": "Determine when incapacitation trait has an effect on the outcome.",
+        "Level": "When target is a high level compared to the effect",
+        "Trait": "When target has a certain trait",
+        "Never": "Never"
+      },
+      "RequiredLevelDifference": {
+        "name": "Level difference",
+        "hint": "Set how many levels higher the target needs to be than the effect to trigger the incapacitation effect bonus."
+      },
+      "TraitName": {
+        "name": "Trait",
+        "hint": "Set a trait that determines which creatures have a bonus against incapacitation."
+      },
+      "SpellEffectLevel": {
+        "name": "Effect level for spells",
+        "hint": "Change how effect level is calculated for spells.",
+        "SlotLevel": "2 x Spell Slot Level",
+        "CasterLevel": "Caster Level"
+      },
+      "IncapacitationEffect": {
+        "name": "Incapacitation effect",
+        "hint": "Change how incapacitation affects the outcome of the check.",
+        "ImproveAllDOS": "Improve degree of success",
+        "ImproveWorstDOS": "Improve critical failures only",
+        "ImproveWorst2DOS": "Improve failures",
+        "RollTwice": "Roll twice and keep higher",
+        "GiveBonus": "Add a bonus"
+      },
+      "BonusAmount": {
+        "name": "Bonus value",
+        "hint": "When the incapacitation effect is to add a bonus, this value is added."
+      }
+    }
   }
 }
