@@ -25,6 +25,11 @@ This modules supports these options:
 * Improve the degree of success only for the worst two cases. Similar to the previous, this makes powerful effects less likely, but compared to the default option makes it much less likely that there will be no effect.
 * Roll twice and keep the best. This option makes the most powerful effects much less likely, but still possible.
 * Add a flat bonus. Similar effect to rolling twice, but can be adjusted more granularly.
+* Change the degrees of success improved depending on HP:
+  * \>75%: All degrees of success are improved.
+  * 50%-75%: Worst 2 degrees of success are improved.
+  * 25%-50%: Worst degree of success is improved.
+  * \<25%: Incapacitation trait has no effect.
 
 ## Licenses
 
@@ -41,7 +46,6 @@ For more information about Paizo Inc. and Paizo products, visit [paizo.com](http
 Open Game License:
 
 * See [OpenGameLicense.md](OpenGameLicense.md)
-
 
 Virtual Table Top Platform Licenses:
 

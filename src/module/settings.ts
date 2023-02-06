@@ -66,6 +66,9 @@ export function registerSettings() {
             ImproveWorst2DOS: game.i18n.localize(`${MODULENAME}.SETTINGS.IncapacitationEffect.ImproveWorst2DOS`),
             RollTwice: game.i18n.localize(`${MODULENAME}.SETTINGS.IncapacitationEffect.RollTwice`),
             GiveBonus: game.i18n.localize(`${MODULENAME}.SETTINGS.IncapacitationEffect.GiveBonus`),
+            ScaleDOSImprovementsWithHP: game.i18n.localize(
+                `${MODULENAME}.SETTINGS.IncapacitationEffect.ScaleDOSImprovementsWithHP`
+            ),
         },
     });
 
@@ -105,6 +108,12 @@ export function getTraitNameSetting() {
 
 export type SpellEffectLevel = "SlotLevel" | "CasterLevel";
 
-export type IncapacitationEffect = "ImproveAllDOS" | "ImproveWorstDOS" | "ImproveWorst2DOS" | "GiveBonus" | "RollTwice";
+export type IncapacitationEffect =
+    | "ImproveAllDOS"
+    | "ImproveWorstDOS"
+    | "ImproveWorst2DOS"
+    | "GiveBonus"
+    | "RollTwice"
+    | "ScaleDOSImprovementsWithHP";
 
 export type ApplicationBasis = "Level" | "Trait" | "Never";

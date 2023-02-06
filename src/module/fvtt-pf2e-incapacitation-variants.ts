@@ -101,6 +101,9 @@ function rewriteIncapacitation(check: CheckModifier, context: CheckRollContext) 
             case "RollTwice":
                 rollTwice(context);
                 break;
+            case "ScaleDOSImprovementsWithHP":
+                scaleWithHP(context);
+                break;
             case "ImproveAllDOS":
             default:
                 improveAllDOS(context);
@@ -108,6 +111,21 @@ function rewriteIncapacitation(check: CheckModifier, context: CheckRollContext) 
         }
     } else {
         log("Incapacitation does not apply");
+    }
+}
+
+function scaleWithHP(context: CheckRollContext) {
+    const hitPoints = context.target?.actor?.hitPoints ?? context.actor?.hitPoints;
+    if (!hitPoints) {
+        return;
+    }
+    const percent = (100 * hitPoints.value) / hitPoints.max;
+    if (percent > 75) {
+        improveAllDOS(context);
+    } else if (percent > 50) {
+        improveWorst2DOS(context);
+    } else if (percent > 25) {
+        improveWorstDOS(context);
     }
 }
 

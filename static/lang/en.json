@@ -29,7 +29,8 @@
         "ImproveWorstDOS": "Improve critical failures only",
         "ImproveWorst2DOS": "Improve failures",
         "RollTwice": "Roll twice and keep higher",
-        "GiveBonus": "Add a bonus"
+        "GiveBonus": "Add a bonus",
+        "ScaleDOSImprovementsWithHP": "Improve fewer degrees of success as HP decreases"
       },
       "BonusAmount": {
         "name": "Bonus value",
