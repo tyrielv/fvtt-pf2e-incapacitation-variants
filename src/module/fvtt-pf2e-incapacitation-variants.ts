@@ -44,8 +44,12 @@ const wrapper = (
     event?: JQuery.TriggeredEvent | null,
     callback?: CheckRollCallback
 ) => {
-    if (context && hasIncapacitationTrait(context)) {
-        rewriteIncapacitation(check, context);
+    try {
+        if (context && hasIncapacitationTrait(context)) {
+            rewriteIncapacitation(check, context);
+        }
+    } catch (error) {
+        console.error(error);
     }
     return original(check, context, event, callback);
 };
@@ -221,8 +225,23 @@ function isSavingThrow(context: CheckRollContext) {
 }
 
 function hasIncapacitationTrait(context: CheckRollContext) {
-    const options = context.options;
+    const options = getOptionsSet(context.options);
     return !!options && (options.has("incapacitation") || options.has("item:trait:incapacitation")) && context.dc;
+}
+
+function getOptionsSet(rawOptions: any): Set<string> {
+    if (rawOptions) {
+        if (rawOptions instanceof Set) {
+            return rawOptions;
+        }
+        try {
+            const result = new Set(rawOptions as Iterable<string>);
+            return result;
+        } catch {
+            /* empty */
+        }
+    }
+    return new Set<string>();
 }
 
 function incapacitationAppliesBasedOnLevelDifference(context: CheckRollContext, requiredLevelDifference: number) {
@@ -255,7 +274,8 @@ function removeSystemIncapacitation(context: CheckRollContext) {
 function getEffectLevel(context: CheckRollContext) {
     const item = context.item;
     const actor = context.actor;
-    const originLevelString = Array.from(context.options?.values() ?? [])
+    const options = getOptionsSet(context.options);
+    const originLevelString = Array.from(options.values() ?? [])
         .find((x) => x.startsWith("origin:level:"))
         ?.substring("origin:level:".length);
     const originLevel = originLevelString ? parseInt(originLevelString) : undefined;
@@ -267,8 +287,8 @@ function getEffectLevel(context: CheckRollContext) {
             ? originLevel ?? actor?.level ?? 2 * item.level
             : 2 * item.level
         : item?.isOfType("physical")
-            ? item.level
-            : originLevel ?? actor?.level;
+        ? item.level
+        : originLevel ?? actor?.level;
     if (Number.isNaN(effectLevel)) {
         return undefined;
     }

@@ -49,7 +49,7 @@ declare type AttackCheck = "attack-roll" | "spell-attack-roll";
 declare type CheckType = "check" | "counteract-check" | "initiative" | "skill-check" | "perception-check" | "saving-throw" | "flat-check" | AttackCheck;
 interface BaseRollContext {
     /** Any options which should be used in the roll. */
-    options?: Set<string>;
+    options?: Set<string> | string[];
     /** Any notes which should be shown for the roll. */
     notes?: RollNotePF2e[];
     /** If true, this is a secret roll which should only be seen by the GM. */
