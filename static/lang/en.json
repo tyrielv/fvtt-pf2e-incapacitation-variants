@@ -35,6 +35,10 @@
       "BonusAmount": {
         "name": "Bonus value",
         "hint": "When the incapacitation effect is to add a bonus, this value is added."
+      },
+      "HPThreshold": {
+        "name": "HP Threshold (%)",
+        "hint": "If a creature has less than this % of HP left, the incapacitation trait will be disabled for it."
       }
     }
   }

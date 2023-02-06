@@ -55,6 +55,14 @@ const wrapper = (
 };
 
 function determineApplies(context: CheckRollContext) {
+    const hpThreshold = Settings.getHpThreshold();
+    const hitPoints = context.target?.actor?.hitPoints ?? context.actor?.hitPoints;
+    if (hitPoints) {
+        const percent = (100 * hitPoints.value) / hitPoints.max;
+        if (percent <= hpThreshold) {
+            return false;
+        }
+    }
     const applicationBasis = Settings.getApplicationBasisSetting();
     switch (applicationBasis) {
         case "Level":

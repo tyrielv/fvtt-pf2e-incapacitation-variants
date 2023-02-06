@@ -3,6 +3,20 @@ import { MODULENAME, log } from "./fvtt-pf2e-incapacitation-variants";
 export function registerSettings() {
     log("registerSettings");
 
+    game.settings.register(MODULENAME, "HPThreshold", {
+        name: `${MODULENAME}.SETTINGS.HPThreshold.name`,
+        hint: `${MODULENAME}.SETTINGS.HPThreshold.hint`,
+        scope: "world",
+        config: true,
+        default: 0,
+        type: Number,
+        range: {
+            min: 0,
+            max: 99,
+            step: 1,
+        },
+    });
+
     game.settings.register(MODULENAME, "ApplicationBasis", {
         name: `${MODULENAME}.SETTINGS.ApplicationBasis.name`,
         hint: `${MODULENAME}.SETTINGS.ApplicationBasis.hint`,
@@ -100,6 +114,10 @@ export function getApplicationBasisSetting(): ApplicationBasis {
 
 export function getBonusAmountSetting(): number {
     return game.settings.get(MODULENAME, "BonusAmount") as number;
+}
+
+export function getHpThreshold(): number {
+    return game.settings.get(MODULENAME, "HPThreshold") as number;
 }
 
 export function getTraitNameSetting() {

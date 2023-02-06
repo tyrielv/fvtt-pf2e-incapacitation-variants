@@ -14,6 +14,8 @@ This module supports these options:
 * use the caster level instead of the spell level when determining the effect level of a spell. This would allow a high-level caster to incapacitate a lower-level creature using a low-level spell. (While players may love this for their spells, it makes higher level enemy spellcasters very dangerous.)
 * instead of using level difference, only trigger the incapacitation trait for creatures with a particular trait. For example, you could give certain enemies the "Boss" trait to make them harder to incapacitate regardless of level, while other creatures would be easier to incapacitate even if higher level.
 
+In combination with any of the other options, the incapacitation trait can also be configured to disable when a creature is below an HP threshold (e.g. 50%).
+
 ### Change *how* incapacitation trait affects the outcome
 
 The official rules increase the degree of success by one (for saving throws rolled by the target) or decrease it by one (for attacks or other rolls by the effect creator).
