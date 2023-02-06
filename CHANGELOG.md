@@ -1,3 +1,11 @@
+# [1.1.0](https://github.com/tyrielv/fvtt-pf2e-incapacitation-variants/compare/v1.0.1...v1.1.0) (2023-02-06)
+
+
+### Features
+
+* Add option to scale DOS-improvements with HP ([fac1e78](https://github.com/tyrielv/fvtt-pf2e-incapacitation-variants/commit/fac1e78fb62531d21cb96fcd4f7a778db4621e98))
+* Support disabling incapacitation at an HP threshold (eg 50%) ([d92ea91](https://github.com/tyrielv/fvtt-pf2e-incapacitation-variants/commit/d92ea914f1f5782726133c79c0194bc14778f36f))
+
 ## [1.0.1](https://github.com/tyrielv/fvtt-pf2e-incapacitation-variants/compare/v1.0.0...v1.0.1) (2023-02-06)
 
 
