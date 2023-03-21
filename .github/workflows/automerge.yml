@@ -7,11 +7,6 @@ permissions:
   pull-requests: write  # Needed if in a private repository
 
 jobs:
-  actorcheck:
-    runs-on: ubuntu-latest
-    steps:
-      - name: print
-        run: echo "${{ github.actor }}"
   dependabot:
     runs-on: ubuntu-latest
     if: ${{ github.actor == 'dependabot[bot]' || github.actor == 'tyrielv' }}
