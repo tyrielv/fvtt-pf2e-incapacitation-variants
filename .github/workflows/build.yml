@@ -1,0 +1,28 @@
+name: Build
+
+# Run the workflow when a Pull Request is opened or when changes are pushed to main on 'tyrielv/fvtt-pf2e-incapacitation-variants' (i.e. don't run on forks)
+on:
+  pull_request:
+    branches: [ main ]
+  push:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3.6.0
+        with:
+          node-version: 18.x
+          cache: 'npm'
+
+      - name: Install
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+
