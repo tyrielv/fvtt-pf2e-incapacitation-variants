@@ -13,7 +13,7 @@ jobs:
     
     # Waits for test jobs for each Node.js version to complete
     #        needs: [ test ]
-    
+    steps:
       - name: Release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
