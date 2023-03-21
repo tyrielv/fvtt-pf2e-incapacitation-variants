@@ -1,34 +1,19 @@
-name: Test and release
+name: Release
 
-# Run the workflow when a Pull Request is opened or when changes are pushed to main on 'tyrielv/fvtt-pf2e-incapacitation-variants' (i.e. don't run on forks)
 on:
-  pull_request:
   push:
     branches: [ main ]
 
 jobs:
   release:
-    # Only release on push to main on tyrielv/fvtt-pf2e-incapacitation-variants
-    if: github.event_name == 'push' && (github.ref == 'refs/heads/main') && github.repository == 'tyrielv/fvtt-pf2e-incapacitation-variants'
     runs-on: ubuntu-latest
+    
+    # Only release on push to main on tyrielv/fvtt-pf2e-incapacitation-variants
+    if: (github.ref == 'refs/heads/main') && github.repository == 'tyrielv/fvtt-pf2e-incapacitation-variants'
+    
     # Waits for test jobs for each Node.js version to complete
     #        needs: [ test ]
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-
-      - name: Setup Node.js
-        uses: actions/setup-node@v3.6.0
-        with:
-          node-version: 18.x
-          cache: 'npm'
-
-      - name: Install
-        run: npm install
-
-      - name: Build
-        run: npm run build
-
+    
       - name: Release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -58,4 +43,3 @@ jobs:
           #FVTT_PACKAGE_ID: ${{ 1702 }}
           #FVTT_USERNAME: ${{ secrets.FOUNDRY_ADMIN_USERNAME }}
           #FVTT_PASSWORD: ${{ secrets.FOUNDRY_ADMIN_PASSWORD }}
-
