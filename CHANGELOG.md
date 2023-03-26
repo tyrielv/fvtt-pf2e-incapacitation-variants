@@ -1,3 +1,10 @@
+# [1.2.0](https://github.com/tyrielv/fvtt-pf2e-incapacitation-variants/compare/v1.1.0...v1.2.0) (2023-03-26)
+
+
+### Features
+
+* Use libWrapper if it is installed ([9b98414](https://github.com/tyrielv/fvtt-pf2e-incapacitation-variants/commit/9b98414a8005636eead4bce33f4227048df0a52d))
+
 # [1.1.0](https://github.com/tyrielv/fvtt-pf2e-incapacitation-variants/compare/v1.0.1...v1.1.0) (2023-02-06)
 
 
