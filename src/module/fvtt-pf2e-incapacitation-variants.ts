@@ -30,20 +30,32 @@ Hooks.once("pf2e.systemReady", async () => {
     wrap();
 });
 
-let original: typeof CheckPF2e.roll;
-
+declare const libWrapper: any;
 function wrap() {
     // TODO: See if libwrapper works for system methods
-    original = game.pf2e.Check.roll.bind(game.pf2e.Check);
-    game.pf2e.Check.roll = wrapper;
+    if (typeof libWrapper === "function") {
+        libWrapper.register(MODULENAME, "game.pf2e.Check.roll", updateIncapacitation, "WRAPPER");
+    } else {
+        ui.notifications.warn(`Module ${MODULENAME} recommends the 'libWrapper' module.`);
+        const original = game.pf2e.Check.roll.bind(game.pf2e.Check);
+        game.pf2e.Check.roll = (
+            check: CheckModifier,
+            context?: CheckRollContext,
+            event?: JQuery.TriggeredEvent | null,
+            callback?: CheckRollCallback
+        ) => {
+            return updateIncapacitation(original, check, context, event, callback);
+        };
+    }
 }
 
-const wrapper = (
+function updateIncapacitation(
+    original: typeof CheckPF2e.roll,
     check: CheckModifier,
     context?: CheckRollContext,
     event?: JQuery.TriggeredEvent | null,
     callback?: CheckRollCallback
-) => {
+) {
     try {
         if (context && hasIncapacitationTrait(context)) {
             rewriteIncapacitation(check, context);
@@ -52,7 +64,7 @@ const wrapper = (
         console.error(error);
     }
     return original(check, context, event, callback);
-};
+}
 
 function determineApplies(context: CheckRollContext) {
     const hpThreshold = Settings.getHpThreshold();
@@ -313,8 +325,8 @@ function getEffectLevel(context: CheckRollContext) {
             ? originLevel ?? actor?.level ?? 2 * item.level
             : 2 * item.level
         : item?.isOfType("physical")
-        ? item.level
-        : originLevel ?? actor?.level;
+            ? item.level
+            : originLevel ?? actor?.level;
     if (Number.isNaN(effectLevel)) {
         return undefined;
     }
