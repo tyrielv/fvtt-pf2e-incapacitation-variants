@@ -38,7 +38,10 @@ This modules supports these options:
 Project Licensing:
 
 * Everything in this project that is not covered by one of the following license exceptions is made available under the
-  MIT License (see [LICENSE](LICENSE)).
+  Apache 2.0 License: (see [LICENSE](LICENSE)).
+
+* This repository was based on https://github.com/xdy/xdy-pf2e-workbench, under the Apache 2.0 License.
+In particular, the 'types' directory was copied from that project, with minor modifications to update some API signatures that this project uses, and most files in the repository root are modified from their equivalents in that project to fit the needs of this one.
 
 This module uses trademarks and/or copyrights owned by Paizo Inc., used
 under [Paizo's Community Use Policy (paizo.com/communityuse)](https://paizo.com/communityuse). We are expressly prohibited from
@@ -53,3 +56,4 @@ Virtual Table Top Platform Licenses:
 
 * Foundry VTT support is covered by the following
   license: [Limited License Agreement for module development](https://foundryvtt.com/article/license/).
+
