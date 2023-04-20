@@ -51,7 +51,7 @@
     "prettier": "^2.8.7",
     "semantic-release": "^21.0.1",
     "simple-progress-webpack-plugin": "^2.0.0",
-    "thread-loader": "^4.0.0",
+    "thread-loader": "^4.0.1",
     "ts-loader": "^9.4.2",
     "ts-node": "^10.9.1",
     "typedoc": "^0.24.4",
