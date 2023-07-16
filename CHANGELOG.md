@@ -1,3 +1,10 @@
+## [1.2.2](https://github.com/tyrielv/fvtt-pf2e-incapacitation-variants/compare/v1.2.1...v1.2.2) (2023-07-16)
+
+
+### Bug Fixes
+
+* typo in module.json ([3543cac](https://github.com/tyrielv/fvtt-pf2e-incapacitation-variants/commit/3543cac27ac79f49295c033695e9ac85341aa36b))
+
 ## [1.2.1](https://github.com/tyrielv/fvtt-pf2e-incapacitation-variants/compare/v1.2.0...v1.2.1) (2023-07-16)
 
 
