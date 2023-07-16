@@ -1,4 +1,12 @@
 # fvtt-pf2e-incapacitation-variants
+![](https://img.shields.io/endpoint?url=https%3A%2F%2Ffoundryshields.com%2Fversion%3Fstyle%3Dflat%26url%3Dhttps://raw.githubusercontent.com/tyrielv/fvtt-pf2e-incapacitation-variants/main/module.json)
+![](https://img.shields.io/endpoint?url=https%3A%2F%2Ffoundryshields.com%2Fsystem%3FnameType%3Dfull%26showVersion%3D1%26style%3Dflat%26url%3Dhttps://raw.githubusercontent.com/tyrielv/fvtt-pf2e-incapacitation-variants/main/module.json)
+
+![](https://img.shields.io/github/release-date/tyrielv/fvtt-pf2e-incapacitation-variants)
+
+![](https://img.shields.io/github/downloads/tyrielv/fvtt-pf2e-incapacitation-variants/total?label=All%20Downloads)
+![](https://img.shields.io/github/downloads-pre/tyrielv/fvtt-pf2e-incapacitation-variants/latest/total?label=Latest%20version)
+![](https://img.shields.io/badge/dynamic/json?label=Forge%20Installs&query=package.installs&suffix=%25&url=https%3A%2F%2Fforge-vtt.com%2Fapi%2Fbazaar%2Fpackage%2Ffvtt-pf2e-incapacitation-variants&colorB=4aa94a)
 
 Automation for several homebrew variants of the Incapacitation trait for Pathfinder 2nd Edition in Foundry VTT
 
