@@ -3,7 +3,7 @@
   "description": "Automation for several house rule variants of the Incapacitation trait for Pathfinder 2nd Edition in Foundry VTT",
   "version": "1.2.1",
   "id": "fvtt-pf2e-incapacitation-variants",
-  "compatibiliity": {
+  "compatibility": {
     "minimum": "10",
     "verified": "11.305"
   },
