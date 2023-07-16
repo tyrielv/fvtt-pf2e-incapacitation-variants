@@ -1,3 +1,10 @@
+## [1.2.1](https://github.com/tyrielv/fvtt-pf2e-incapacitation-variants/compare/v1.2.0...v1.2.1) (2023-07-16)
+
+
+### Bug Fixes
+
+* Verified for Foundry 11 and PF2E 5 ([a228414](https://github.com/tyrielv/fvtt-pf2e-incapacitation-variants/commit/a22841440ec2d758fdbe2697c1ffca8b4feee507))
+
 # [1.2.0](https://github.com/tyrielv/fvtt-pf2e-incapacitation-variants/compare/v1.1.0...v1.2.0) (2023-03-26)
 
 
