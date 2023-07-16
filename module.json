@@ -5,7 +5,7 @@
   "id": "fvtt-pf2e-incapacitation-variants",
   "compatibiliity": {
     "minimum": "10",
-    "verified": "10.291"
+    "verified": "11.305"
   },
   "relationships": {
     "systems": [
@@ -15,7 +15,7 @@
         "manifest": "https://github.com/foundryvtt/pf2e/releases/download/latest/system.json",
         "compatibility": {
           "minimum": "4.5.0",
-          "verified": "4.7.1"
+          "verified": "5.1.2"
         }
       }
     ]
