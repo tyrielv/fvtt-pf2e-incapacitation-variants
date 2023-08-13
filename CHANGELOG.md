@@ -1,3 +1,10 @@
+# [1.3.0](https://github.com/tyrielv/fvtt-pf2e-incapacitation-variants/compare/v1.2.2...v1.3.0) (2023-08-13)
+
+
+### Features
+
+* Support taking better of caster level or 2 x spell rank to determine effect level. ([06cebd4](https://github.com/tyrielv/fvtt-pf2e-incapacitation-variants/commit/06cebd43ec2f2d7257a5351d8963d2180fb8a36d))
+
 ## [1.2.2](https://github.com/tyrielv/fvtt-pf2e-incapacitation-variants/compare/v1.2.1...v1.2.2) (2023-07-16)
 
 
