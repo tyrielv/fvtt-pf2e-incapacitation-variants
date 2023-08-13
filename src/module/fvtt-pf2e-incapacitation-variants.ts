@@ -319,7 +319,7 @@ function getEffectLevel(context: CheckRollContext) {
 
     const setting = Settings.getSpellEffectLevelSetting();
 
-    let effectLevel: Number | undefined;
+    let effectLevel: number | undefined;
     if (item?.isOfType("spell")) {
         const casterLevel = originLevel ?? actor?.level ?? 2 * item.level;
         const spellLevel = 2 * item.level;

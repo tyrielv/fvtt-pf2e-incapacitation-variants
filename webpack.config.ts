@@ -69,111 +69,112 @@ const optimization: Optimization = isProductionBuild
     }
     : undefined;
 
-    const config: Configuration = {
-        context: __dirname,
-        mode: buildMode,
-        entry: {
-            main: "./src/module/fvtt-pf2e-incapacitation-variants.ts",
-        },
-        module: {
-            rules: [
-                !isProductionBuild
-                    ? {
-                        test: /\.html$/,
-                        loader: "raw-loader",
-                    }
-                    : {
-                        test: /\.html$/,
-                        loader: "null-loader",
-                    },
-                {
-                    test: /\.ts$/,
-                    use: [
-                        {
-                            loader: "ts-loader",
-                            options: {
-                                configFile: path.resolve(__dirname, "tsconfig.json"),
-                                happyPackMode: true,
-                                transpileOnly: true,
-                                compilerOptions: {
-                                    noEmit: false,
-                                },
+const config: Configuration = {
+    context: __dirname,
+    mode: buildMode,
+    entry: {
+        main: "./src/module/fvtt-pf2e-incapacitation-variants.ts",
+    },
+    module: {
+        rules: [
+            !isProductionBuild
+                ? {
+                    test: /\.html$/,
+                    loader: "raw-loader",
+                }
+                : {
+                    test: /\.html$/,
+                    loader: "null-loader",
+                },
+            {
+                test: /\.ts$/,
+                use: [
+                    {
+                        loader: "ts-loader",
+                        options: {
+                            configFile: path.resolve(__dirname, "tsconfig.json"),
+                            happyPackMode: true,
+                            transpileOnly: true,
+                            compilerOptions: {
+                                noEmit: false,
                             },
                         },
-                        "webpack-import-glob-loader",
-                    ],
+                    },
+                    "webpack-import-glob-loader",
+                ],
+            },
+            {
+                loader: "thread-loader",
+                options: {
+                    workers: os.cpus().length + 1,
+                    poolRespawn: false,
+                    poolTimeout: isProductionBuild ? 500 : Infinity,
+                },
+            },
+        ],
+    },
+    optimization: optimization,
+    devtool: isProductionBuild ? undefined : "inline-source-map",
+    watch: !isProductionBuild,
+    bail: isProductionBuild,
+    devServer: {
+        hot: true,
+        devMiddleware: {
+            writeToDisk: true,
+        },
+        proxy: {
+            context: (pathname: string, _request: Request) => {
+                return !pathname.match("^/ws");
+            },
+            target: foundryUri,
+            ws: true,
+        },
+    },
+    plugins: [
+        new ForkTsCheckerWebpackPlugin(),
+        new webpack.DefinePlugin({
+            BUILD_MODE: JSON.stringify(buildMode),
+        }),
+        new CopyPlugin({
+            patterns: [
+                { from: "module.json" },
+                {
+                    from: "packs/*.db",
+                    noErrorOnMissing: true,
                 },
                 {
-                    loader: "thread-loader",
-                    options: {
-                        workers: os.cpus().length + 1,
-                        poolRespawn: false,
-                        poolTimeout: isProductionBuild ? 500 : Infinity,
+                    from: "static/",
+                    transform(content: Buffer, absoluteFrom: string) {
+                        if (path.basename(absoluteFrom) === "en.json") {
+                            return JSON.stringify(JSON.parse(content.toString()));
+                        }
+                        return content;
                     },
                 },
             ],
+        }),
+        new SimpleProgressWebpackPlugin({ format: "compact" }),
+        new EmptyStaticFilesPlugin(),
+    ],
+    resolve: {
+        alias: {
+            "@actor": path.resolve(__dirname, "types/src/module/actor"),
+            "@item": path.resolve(__dirname, "types/src/module/item"),
+            "@module": path.resolve(__dirname, "types/src/module"),
+            "@scene": path.resolve(__dirname, "types/src/module/scene"),
+            "@scripts": path.resolve(__dirname, "types/src/scripts"),
+            "@system": path.resolve(__dirname, "types/src/module/system"),
+            "@util": path.resolve(__dirname, "types/src/util"),
         },
-        optimization: optimization,
-        devtool: isProductionBuild ? undefined : "inline-source-map",
-        watch: !isProductionBuild,
-        bail: isProductionBuild,
-        devServer: {
-            hot: true,
-            devMiddleware: {
-                writeToDisk: true,
-            },
-            proxy: {
-                context: (pathname: string, _request: Request) => {
-                    return !pathname.match("^/ws");
-                },
-                target: foundryUri,
-                ws: true,
-            },
-        },
-        plugins: [
-            new ForkTsCheckerWebpackPlugin(),
-            new webpack.DefinePlugin({
-                BUILD_MODE: JSON.stringify(buildMode),
-            }),
-            new CopyPlugin({
-                patterns: [
-                    { from: "module.json" },
-                    {
-                        from: "packs/*.db",
-                        noErrorOnMissing: true,
-                    },
-                    {
-                        from: "static/",
-                        transform(content: Buffer, absoluteFrom: string) {
-                            if (path.basename(absoluteFrom) === "en.json") {
-                                return JSON.stringify(JSON.parse(content.toString()));
-                            }
-                            return content;
-                        },
-                    },
-                ],
-            }),
-            new SimpleProgressWebpackPlugin({ format: "compact" }),
-            new EmptyStaticFilesPlugin(),
-        ],
-        resolve: {
-            alias: {
-                "@actor": path.resolve(__dirname, "types/src/module/actor"),
-                "@item": path.resolve(__dirname, "types/src/module/item"),
-                "@module": path.resolve(__dirname, "types/src/module"),
-                "@scene": path.resolve(__dirname, "types/src/module/scene"),
-                "@scripts": path.resolve(__dirname, "types/src/scripts"),
-                "@system": path.resolve(__dirname, "types/src/module/system"),
-                "@util": path.resolve(__dirname, "types/src/util"),
-            },
-            extensions: [".ts", ".js"],
-        },
-        output: {
-            clean: true,
-            path: outDir,
-            filename: "fvtt-pf2e-incapacitation-variants.bundle.js",
-        },
-    };
+        extensions: [".ts", ".js"],
+    },
+    output: {
+        clean: true,
+        path: outDir,
+        publicPath: ".",
+        filename: "fvtt-pf2e-incapacitation-variants.bundle.js",
+    },
+};
 
-    // eslint-disable-next-line import/no-default-export
-    export default config;
+// eslint-disable-next-line import/no-default-export
+export default config;

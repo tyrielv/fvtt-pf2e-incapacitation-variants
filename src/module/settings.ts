@@ -64,7 +64,7 @@ export function registerSettings() {
         choices: {
             SlotLevel: game.i18n.localize(`${MODULENAME}.SETTINGS.SpellEffectLevel.SlotLevel`),
             CasterLevel: game.i18n.localize(`${MODULENAME}.SETTINGS.SpellEffectLevel.CasterLevel`),
-            BetterOfSlotOrCasterLevel: game.i18n.localize(`${MODULENAME}.SETTINGS.SpellEffectLevel.BetterOfSlotOrCaster`),
+            BetterOfSlotLevelOrCasterLevel: game.i18n.localize(`${MODULENAME}.SETTINGS.SpellEffectLevel.BetterOfSlotLevelOrCasterLevel`),
         },
     });
 
