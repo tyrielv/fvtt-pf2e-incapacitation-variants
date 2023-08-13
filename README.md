@@ -19,7 +19,7 @@ The [official rules](https://2e.aonprd.com/Traits.aspx?ID=93) change the outcome
 This module supports these options:
 
 * change the level difference required to trigger the incapacitation trait. For example, you could make it apply to creature 2 levels higher instead of 1 level higher. This could be particularly useful when using Proficiency Without Level to expand the range of levels that are viable in encounter building.
-* use the caster level instead of the spell level when determining the effect level of a spell. This would allow a high-level caster to incapacitate a lower-level creature using a low-level spell. (While players may love this for their spells, it makes higher level enemy spellcasters very dangerous.)
+* use the caster level instead of 2 x spell rank when determining the effect level of a spell. This would allow a high-level caster to incapacitate a lower-level creature using a low-level spell. (While players may love this for their spells, it makes higher level enemy spellcasters very dangerous.) Alternatively, take the better of caster level or 2 x spell rank, to preserve the slight boost for max-level spells on odd character levels.
 * instead of using level difference, only trigger the incapacitation trait for creatures with a particular trait. For example, you could give certain enemies the "Boss" trait to make them harder to incapacitate regardless of level, while other creatures would be easier to incapacitate even if higher level.
 
 In combination with any of the other options, the incapacitation trait can also be configured to disable when a creature is below an HP threshold (e.g. 50%).

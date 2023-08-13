@@ -19,8 +19,9 @@
       "SpellEffectLevel": {
         "name": "Effect level for spells",
         "hint": "Change how effect level is calculated for spells.",
-        "SlotLevel": "2 x Spell Slot Level",
-        "CasterLevel": "Caster Level"
+        "SlotLevel": "2 x Spell Slot Rank",
+        "CasterLevel": "Caster Level",
+        "BetterOf": "Better of Caster Level or 2 x Spell Slot Rank"
       },
       "IncapacitationEffect": {
         "name": "Incapacitation effect",

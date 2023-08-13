@@ -208,7 +208,6 @@ function improveWorst2DOS(context: CheckRollContext) {
 }
 
 function giveBonus(check: CheckModifier, context: CheckRollContext) {
-    log(`Not implemented - giveBonus: ${check}`);
     let bonus = Settings.getBonusAmountSetting();
     if (!isSavingThrow(context)) {
         bonus = -bonus;
@@ -320,13 +319,26 @@ function getEffectLevel(context: CheckRollContext) {
 
     const setting = Settings.getSpellEffectLevelSetting();
 
-    const effectLevel = item?.isOfType("spell")
-        ? setting === "CasterLevel"
-            ? originLevel ?? actor?.level ?? 2 * item.level
-            : 2 * item.level
-        : item?.isOfType("physical")
-            ? item.level
-            : originLevel ?? actor?.level;
+    let effectLevel: Number | undefined;
+    if (item?.isOfType("spell")) {
+        const casterLevel = originLevel ?? actor?.level ?? 2 * item.level;
+        const spellLevel = 2 * item.level;
+        switch (setting) {
+            case "CasterLevel":
+                effectLevel = casterLevel;
+                break;
+            case "SlotLevel":
+                effectLevel = spellLevel;
+                break;
+            case "BetterOfSlotLevelOrCasterLevel":
+                effectLevel = Math.max(casterLevel, spellLevel);
+                break;
+        }
+    } else if (item?.isOfType("physical")) {
+        effectLevel = item.level;
+    } else {
+        effectLevel = originLevel ?? actor?.level;
+    }
     if (Number.isNaN(effectLevel)) {
         return undefined;
     }
