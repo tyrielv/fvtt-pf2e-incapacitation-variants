@@ -48,7 +48,7 @@
     "fork-ts-checker-webpack-plugin": "^8.0.0",
     "fs-extra": "^11.1.1",
     "lint-staged": "^14.0.1",
-    "prettier": "^3.0.2",
+    "prettier": "^3.0.3",
     "semantic-release": "^21.1.1",
     "simple-progress-webpack-plugin": "^2.0.0",
     "thread-loader": "^4.0.2",
