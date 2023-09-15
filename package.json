@@ -34,7 +34,7 @@
     "@semantic-release/github": "^9.0.6",
     "@semantic-release/release-notes-generator": "^11.0.7",
     "@types/copy-webpack-plugin": "^10.1.0",
-    "@types/fs-extra": "^11.0.1",
+    "@types/fs-extra": "^11.0.2",
     "@types/jquery": "^3.5.18",
     "@types/node": "^20.6.1",
     "@typescript-eslint/eslint-plugin": "^6.7.0",
