@@ -52,7 +52,7 @@
     "semantic-release": "^22.0.7",
     "simple-progress-webpack-plugin": "^2.0.0",
     "thread-loader": "^4.0.2",
-    "ts-loader": "^9.5.0",
+    "ts-loader": "^9.5.1",
     "ts-node": "^10.9.1",
     "typedoc": "^0.25.3",
     "webpack-cli": "^5.1.4",
