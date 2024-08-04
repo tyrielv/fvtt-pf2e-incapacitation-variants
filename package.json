@@ -15,8 +15,8 @@
   },
   "scripts": {
     "build": "webpack --mode production",
-    "build:dev": "npm run && webpack",
-    "start": "webpack serve --hot",
+    "build:dev": "webpack",
+    "start": "webpack",
     "clean": "rm -rf dist/*",
     "lint": "eslint ./src --ext .ts",
     "lint:fix": "eslint ./src --ext .ts --fix",

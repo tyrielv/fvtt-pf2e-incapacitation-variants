@@ -22,7 +22,7 @@ export function registerSettings() {
         hint: `${MODULENAME}.SETTINGS.ApplicationBasis.hint`,
         scope: "world",
         config: true,
-        default: "levelDifference",
+        default: "Level",
         type: String,
         choices: {
             Level: game.i18n.localize(`${MODULENAME}.SETTINGS.ApplicationBasis.Level`),
