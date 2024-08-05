@@ -1,3 +1,10 @@
+## [1.3.1](https://github.com/tyrielv/fvtt-pf2e-incapacitation-variants/compare/v1.3.0...v1.3.1) (2024-08-05)
+
+
+### Bug Fixes
+
+* Verified on PF2E 6, foundry 12. Added test world to reduce manual testing. ([13832f3](https://github.com/tyrielv/fvtt-pf2e-incapacitation-variants/commit/13832f3e6f98a5e0dd97f90db19dc37f0bab1ea9))
+
 # [1.3.0](https://github.com/tyrielv/fvtt-pf2e-incapacitation-variants/compare/v1.2.2...v1.3.0) (2023-08-13)
 
 
