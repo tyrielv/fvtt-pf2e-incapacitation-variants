@@ -7,10 +7,10 @@ on:
 jobs:
   release:
     runs-on: ubuntu-latest
-    
+
     # Only release on push to main on tyrielv/fvtt-pf2e-incapacitation-variants
     if: (github.ref == 'refs/heads/main') && github.repository == 'tyrielv/fvtt-pf2e-incapacitation-variants'
-    
+
     # Waits for test jobs for each Node.js version to complete
     #        needs: [ test ]
     steps:
@@ -20,7 +20,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4.0.3
         with:
-          node-version: 18.x
+          node-version: 20.x
           cache: 'npm'
 
       - name: Install
@@ -28,7 +28,7 @@ jobs:
 
       - name: Build
         run: npm run build
-        
+
       - name: Release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
