@@ -93,6 +93,15 @@ export async function runTests() {
     await setConfigToDefaults();
     await game.settings.set(MODULENAME, Settings.Keys.SpellEffectLevel, "SlotRankPlusHalfCasterLevel");
     var result = await runTestCase(14, level11rank3Message, 'Half level plus rank');
+    if (!result) { return;}
+
+    await setConfigToDefaults();
+    await game.settings.set(MODULENAME, Settings.Keys.IncapacitationEffect, "GiveBonusPerLevelDifference");
+    await game.settings.set(MODULENAME, Settings.Keys.BonusAmount, 2);
+    await game.settings.set(MODULENAME, Settings.Keys.SpellEffectLevel, "CasterLevel");
+    var result = await runTestCase(15, level1Message, 'BonusPerLevelDifference');
+    if (!result) { return;}
+
 
     ui.notifications.info(`All passed`);
     await setConfigToDefaults();

@@ -37,6 +37,7 @@ This modules supports these options:
 * Improve the degree of success only for the worst two cases. Similar to the previous, this makes powerful effects less likely, but compared to the default option makes it much less likely that there will be no effect.
 * Roll twice and keep the best. This option makes the most powerful effects much less likely, but still possible.
 * Add a flat bonus. Similar effect to rolling twice, but can be adjusted more granularly.
+* Add a bonus that scales with level (ie each additional level above the threshold adds the bonus again).
 * Change the degrees of success improved depending on HP:
   * \>75%: All degrees of success are improved.
   * 50%-75%: Worst 2 degrees of success are improved.

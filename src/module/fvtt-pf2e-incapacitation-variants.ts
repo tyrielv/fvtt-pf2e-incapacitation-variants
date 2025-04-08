@@ -122,6 +122,9 @@ function rewriteIncapacitation(check: CheckModifier, context: CheckCheckContext)
             case "GiveBonus":
                 giveBonus(check, context);
                 break;
+            case "GiveBonusPerLevelDifference":
+                giveBonusPerLevel(check, context);
+                break;
             case "RollTwice":
                 rollTwice(context);
                 break;
@@ -223,6 +226,31 @@ function giveBonus(check: CheckModifier, context: CheckCheckContext) {
         enabled: true,
     });
     check.push(modifier);
+}
+
+function giveBonusPerLevel(check: CheckModifier, context: CheckCheckContext) {
+    let bonus = Settings.getBonusAmountSetting();
+    if (!isSavingThrow(context)) {
+        bonus = -bonus;
+    }
+    const effectLevel = getEffectLevel(context);
+    const targetLevel = getTargetLevel(context);
+    if (effectLevel == undefined || targetLevel == undefined) {
+        return;
+    }
+    const levelDifferenceBase = Settings.getRequiredLevelDifferenceSetting();
+
+    const differenceAboveBase = targetLevel - (effectLevel + (levelDifferenceBase - 1));
+    if (differenceAboveBase > 0) {
+        bonus *= differenceAboveBase;
+        const modifier = new game.pf2e.Modifier({
+            label: "PF2E.TraitIncapacitation",
+            type: "untyped",
+            modifier: bonus,
+            enabled: true,
+        });
+        check.push(modifier);
+    }
 }
 
 function rollTwice(context: CheckCheckContext) {

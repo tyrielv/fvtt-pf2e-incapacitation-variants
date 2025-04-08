@@ -92,6 +92,7 @@ export function registerSettings() {
             ImproveWorst2DOS: game.i18n.localize(`${MODULENAME}.SETTINGS.${Keys.IncapacitationEffect}.ImproveWorst2DOS`),
             RollTwice: game.i18n.localize(`${MODULENAME}.SETTINGS.${Keys.IncapacitationEffect}.RollTwice`),
             GiveBonus: game.i18n.localize(`${MODULENAME}.SETTINGS.${Keys.IncapacitationEffect}.GiveBonus`),
+            GiveBonusPerLevelDifference: game.i18n.localize(`${MODULENAME}.SETTINGS.${Keys.IncapacitationEffect}.GiveBonusPerLevelDifference`),
             ScaleDOSImprovementsWithHP: game.i18n.localize(
                 `${MODULENAME}.SETTINGS.${Keys.IncapacitationEffect}.ScaleDOSImprovementsWithHP`
             ),
@@ -147,6 +148,7 @@ export type IncapacitationEffect =
     | "ImproveWorstDOS"
     | "ImproveWorst2DOS"
     | "GiveBonus"
+    | "GiveBonusPerLevelDifference"
     | "RollTwice"
     | "ScaleDOSImprovementsWithHP";
 

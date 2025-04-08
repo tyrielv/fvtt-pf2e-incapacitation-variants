@@ -32,6 +32,7 @@
         "ImproveWorst2DOS": "Improve failures",
         "RollTwice": "Roll twice and keep higher",
         "GiveBonus": "Add a flat, untyped bonus",
+        "GiveBonusPerLevelDifference": "Add an untyped bonus that scales with level difference",
         "ScaleDOSImprovementsWithHP": "Improve fewer degrees of success as HP decreases"
       },
       "BonusAmount": {
