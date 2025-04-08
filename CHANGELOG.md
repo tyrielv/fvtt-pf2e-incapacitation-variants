@@ -1,3 +1,11 @@
+# [1.4.0](https://github.com/tyrielv/fvtt-pf2e-incapacitation-variants/compare/v1.3.1...v1.4.0) (2025-04-08)
+
+
+### Features
+
+* Add bonus that scales with level ([5d3e5eb](https://github.com/tyrielv/fvtt-pf2e-incapacitation-variants/commit/5d3e5eb182c130c9737ccbfb110fc24a57993e48))
+* Support spell rank plus half caster level ([b5cbe79](https://github.com/tyrielv/fvtt-pf2e-incapacitation-variants/commit/b5cbe793a5cf7e59ebb42745c16fb40a0be3e604))
+
 ## [1.3.1](https://github.com/tyrielv/fvtt-pf2e-incapacitation-variants/compare/v1.3.0...v1.3.1) (2024-08-05)
 
 
