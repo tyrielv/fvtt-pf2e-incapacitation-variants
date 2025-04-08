@@ -150,6 +150,7 @@ declare global {
         scenes: Scenes<TScene>;
         tables: RollTables;
         users: Users<TUser>;
+        testIncapacitationVariants?: () => Promise<void>;
 
         constructor(view: string, worldData: object, sessionId: string, socket: io.Socket);
 

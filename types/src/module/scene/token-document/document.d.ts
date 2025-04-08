@@ -18,6 +18,8 @@ declare class TokenDocumentPF2e<TParent extends ScenePF2e | null = ScenePF2e | n
     get scene(): this["parent"];
     /** Is this token emitting light with a negative value */
     get emitsDarkness(): boolean;
+
+    name: string;
     get rulesBasedVision(): boolean;
     /** Is rules-based vision enabled, and does this token's actor have low-light vision (inclusive of darkvision)? */
     get hasLowLightVision(): boolean;

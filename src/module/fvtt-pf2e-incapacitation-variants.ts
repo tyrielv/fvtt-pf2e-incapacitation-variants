@@ -3,6 +3,7 @@ import { CheckModifier } from "@actor/modifiers";
 import { CheckCheckContext } from "@system/check/types";
 export const MODULENAME = "fvtt-pf2e-incapacitation-variants";
 import * as Settings from "./settings";
+import { runTests } from "./tests";
 
 const logEnabled = true;
 
@@ -28,6 +29,9 @@ Hooks.once("ready", async () => {
 
 Hooks.once("pf2e.systemReady", async () => {
     wrap();
+    if (game.world.id === "incapacitation-test") {
+        (window as any).testIncapacitationVariants = runTests;
+    }
 });
 
 declare const libWrapper: any;

@@ -8,6 +8,7 @@ declare global {
      * @see {@link applications.ItemSheet}     The Item configuration application
      */
     class Item<TParent extends Actor | null = Actor | null> extends ClientBaseItem<TParent> {
+        sourceId?: string;
         /** A convenience alias of Item#parent which is more semantically intuitive */
         get actor(): TParent;
 
