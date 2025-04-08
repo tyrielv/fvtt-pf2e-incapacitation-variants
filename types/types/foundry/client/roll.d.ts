@@ -499,6 +499,7 @@ declare global {
     type Rolled<T extends Roll> = T & {
         readonly result: string;
         readonly total: number;
+        readonly degreeOfSuccess: string;
         _evaluated: true;
         terms: RollTerm[];
     };

@@ -1,5 +1,35 @@
-2024/08/04-10:11:25.482 6c4 Recovering log #10
-2024/08/04-10:11:25.482 6c4 Level-0 table #12: started
-2024/08/04-10:11:25.525 6c4 Level-0 table #12: 12058 bytes OK
-2024/08/04-10:11:25.565 6c4 Delete type=0 #10
-2024/08/04-10:11:25.572 6c4 Delete type=3 #8
+2025/04/08-09:18:25.800 447c Recovering log #3
+2025/04/08-09:18:25.803 447c Level-0 table #5: started
+2025/04/08-09:18:26.017 447c Level-0 table #5: 1266979 bytes OK
+2025/04/08-09:18:26.110 447c Delete type=0 #3
+2025/04/08-09:18:26.126 447c Delete type=3 #2
+2025/04/08-13:59:10.258 2bf0 Level-0 table #8: started
+2025/04/08-13:59:10.624 2bf0 Level-0 table #8: 2117841 bytes OK
+2025/04/08-13:59:10.699 2bf0 Delete type=0 #6
+2025/04/08-14:00:15.726 2bf0 Compacting 2@0 + 0@1 files
+2025/04/08-14:00:15.808 2bf0 Generated table #9@0: 11 keys, 35265 bytes
+2025/04/08-14:00:15.808 2bf0 Compacted 2@0 + 0@1 files => 35265 bytes
+2025/04/08-14:00:15.839 2bf0 compacted to: files[ 0 1 0 0 0 0 0 ]
+2025/04/08-14:00:15.839 2bf0 Delete type=2 #5
+2025/04/08-14:00:15.881 2bf0 Delete type=2 #8
+2025/04/08-14:14:09.526 2bf0 Level-0 table #11: started
+2025/04/08-14:14:10.065 2bf0 Level-0 table #11: 2095068 bytes OK
+2025/04/08-14:14:10.193 2bf0 Delete type=0 #7
+2025/04/08-14:42:31.411 2bf0 Compacting 1@0 + 1@1 files
+2025/04/08-14:42:31.623 2bf0 Generated table #12@0: 11 keys, 35337 bytes
+2025/04/08-14:42:31.623 2bf0 Compacted 1@0 + 1@1 files => 35337 bytes
+2025/04/08-14:42:31.673 2bf0 compacted to: files[ 0 1 0 0 0 0 0 ]
+2025/04/08-14:42:31.673 2bf0 Delete type=2 #9
+2025/04/08-14:42:31.694 2bf0 Delete type=2 #11
+2025/04/08-14:43:49.302 2bf0 Level-0 table #14: started
+2025/04/08-14:43:49.635 2bf0 Level-0 table #14: 2107574 bytes OK
+2025/04/08-14:43:49.694 2bf0 Delete type=0 #10
+2025/04/08-14:54:01.549 2bf0 Compacting 1@0 + 1@1 files
+2025/04/08-14:54:01.667 2bf0 Generated table #15@0: 11 keys, 35235 bytes
+2025/04/08-14:54:01.667 2bf0 Compacted 1@0 + 1@1 files => 35235 bytes
+2025/04/08-14:54:01.693 2bf0 compacted to: files[ 0 1 0 0 0 0 0 ]
+2025/04/08-14:54:01.694 2bf0 Delete type=2 #12
+2025/04/08-14:54:01.717 2bf0 Delete type=2 #14
+2025/04/08-14:54:49.266 2bf0 Level-0 table #17: started
+2025/04/08-14:54:49.605 2bf0 Level-0 table #17: 2093815 bytes OK
+2025/04/08-14:54:49.654 2bf0 Delete type=0 #13
