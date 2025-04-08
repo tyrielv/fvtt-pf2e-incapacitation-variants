@@ -11,7 +11,7 @@ declare global {
             input: PIXI.RenderTexture,
             output: PIXI.RenderTexture,
             clearMode?: PIXI.CLEAR_MODES,
-            _currentState?: PIXI.FilterState
+            _currentState?: PIXI.FilterState,
         ): void;
     }
 
@@ -28,7 +28,7 @@ declare global {
         /** If the filter is animated or not. */
         animate: boolean;
 
-        static override defaultUniforms: object;
+        static override defaultUniforms: Record<string, unknown>;
 
         static vertexShader: string;
 
@@ -46,7 +46,7 @@ declare global {
             input: PIXI.RenderTexture,
             output: PIXI.RenderTexture,
             clearMode?: PIXI.CLEAR_MODES,
-            _currentState?: PIXI.FilterState
+            _currentState?: PIXI.FilterState,
         ): void;
     }
 }

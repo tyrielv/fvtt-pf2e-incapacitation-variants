@@ -1,8 +1,7 @@
-export {};
+import type { RollParseNode } from "../client-esm/dice/_types.d.mts";
+import type { DiceTerm, FunctionTerm, OperatorTerm, PoolTerm, RollTerm } from "../client-esm/dice/terms/module.d.ts";
 
 declare global {
-    type RollMode = typeof CONST.DICE_ROLL_MODES[keyof typeof CONST.DICE_ROLL_MODES];
-
     /**
      * An interface and API for constructing and evaluating dice rolls.
      * The basic structure for a dice roll is a string formula and an object of data against which to parse it.
@@ -107,8 +106,10 @@ declare global {
          * @param [options={}] Options which inform how the Roll is evaluated
          * @param [options.minimize=false] Minimize the result, obtaining the smallest possible value.
          * @param [options.maximize=false] Maximize the result, obtaining the largest possible value.
-         * @param [options.async=true]     Evaluate the roll asynchronously, receiving a Promise as the returned value.
-         *                                 This will become the default behavior in version 10.x
+         * @param [options.allowStrings=false] If true, string terms will not cause an error to be thrown during
+         *                                     evaluation.
+         * @param [options.allowInteractive=true] If false, force the use of non-interactive rolls and do not prompt the
+         *                                         user to make manual rolls.
          * @returns The evaluated Roll instance
          *
          * @example
@@ -117,21 +118,66 @@ declare global {
          * console.log(r.result); // 5 + 4 + 2
          * console.log(r.total);  // 11
          */
-        evaluate({ minimize, maximize, async }: EvaluateRollParams & { async?: false }): Rolled<this>;
-        evaluate({ minimize, maximize, async }: EvaluateRollParams & { async: true }): Promise<Rolled<this>>;
-        evaluate({ minimize, maximize, async }: EvaluateRollParams): Rolled<this> | Promise<Rolled<this>>;
+        evaluate(options?: EvaluateRollParams): Promise<Rolled<this>>;
+
+        /**
+         * Execute the Roll synchronously, replacing dice and evaluating the total result.
+         * @param [options={}]
+         * @param [options.minimize=false]     Minimize the result, obtaining the smallest possible value.
+         * @param [options.maximize=false]     Maximize the result, obtaining the largest possible value.
+         * @param [options.strict=true]        Throw an Error if the Roll contains non-deterministic terms that cannot be
+         *                                     evaluated synchronously. If this is set to false, non-deterministic terms will
+         *                                     be ignored.
+         * @param [options.allowStrings=false] If true, string terms will not cause an error to be thrown during evaluation.
+         * @returns The evaluated Roll instance.
+         */
+        evaluateSync(options?: EvaluateRollParams): Rolled<this>;
 
         /**
          * Evaluate the roll asynchronously.
-         * A temporary helper method used to migrate behavior from 0.7.x (sync by default) to 0.9.x (async by default).
+         * @param [options]                  Options which inform how evaluation is performed
+         * @param [options.minimize]         Force the result to be minimized
+         * @param [options.maximize]         Force the result to be maximized
+         * @param [options.allowStrings]     If true, string terms will not cause an error to be thrown during
+         *                                   evaluation.
+         * @param [options.allowInteractive] If false, force the use of digital rolls and do not prompt the user to make
+         *                                   manual rolls.
          */
-        protected _evaluate({ minimize, maximize }?: Omit<EvaluateRollParams, "async">): Promise<Rolled<this>>;
+        protected _evaluate({ minimize, maximize, allowStrings }?: EvaluateRollParams): Promise<Rolled<this>>;
+
+        /**
+         * Evaluate an AST asynchronously.
+         * @param node The root node or term.
+         * @param [options]              Options which inform how evaluation is performed
+         * @param [options.minimize]     Force the result to be minimized
+         * @param [options.maximize]     Force the result to be maximized
+         * @param [options.allowStrings] If true, string terms will not cause an error to be thrown during evaluation.
+         */
+        protected _evaluateASTAsync(
+            node: RollParseNode | RollTerm,
+            options?: EvaluateRollParams,
+        ): Promise<string | number>;
 
         /**
          * Evaluate the roll synchronously.
-         * A temporary helper method used to migrate behavior from 0.7.x (sync by default) to 0.9.x (async by default).
+         * @param [options]          Options which inform how evaluation is performed
+         * @param [options.minimize] Force the result to be minimized
+         * @param [options.maximize] Force the result to be maximized
+         * @param [options.strict]   Throw an error if encountering a term that cannot be synchronously evaluated.
+         * @param [options.allowStrings] If true, string terms will not cause an error to be thrown during evaluation.
          */
-        protected _evaluateSync({ minimize, maximize }?: Omit<EvaluateRollParams, "async">): Rolled<this>;
+        protected _evaluateSync(options?: EvaluateRollSyncParams): Rolled<this>;
+
+        /**
+         * Evaluate an AST synchronously.
+         * @param node                   The root node or term.
+         * @param [options]              Options which inform how evaluation is performed
+         * @param [options.minimize]     Force the result to be minimized
+         * @param [options.maximize]     Force the result to be maximized
+         * @param [options.strict]       Throw an error if encountering a term that cannot be synchronously evaluated.
+         * @param [options.allowStrings] If true, string terms will not cause an error to be thrown during evaluation.
+         */
+        protected _evaluateASTSync(node: RollParseNode | RollTerm, options?: EvaluateRollSyncParams): string | number;
 
         /**
          * Safely evaluate the final total result for the Roll using its component terms.
@@ -143,9 +189,7 @@ declare global {
          * Alias for evaluate.
          * @see {Roll#evaluate}
          */
-        roll({ minimize, maximize, async }: EvaluateRollParams & { async?: false }): Rolled<this>;
-        roll({ minimize, maximize, async }: EvaluateRollParams & { async: true }): Promise<Rolled<this>>;
-        roll({ minimize, maximize, async }: EvaluateRollParams): Rolled<this> | Promise<Rolled<this>>;
+        roll({ minimize, maximize }?: EvaluateRollParams): Promise<Rolled<this>>;
 
         /**
          * Create a new Roll object using the original provided formula and data.
@@ -153,9 +197,7 @@ declare global {
          * @param [options={}] Evaluation options passed to Roll#evaluate
          * @return A new Roll object, rolled using the same formula and data
          */
-        reroll({ minimize, maximize, async }: EvaluateRollParams & { async?: false }): Rolled<this>;
-        reroll({ minimize, maximize, async }: EvaluateRollParams & { async: true }): Promise<Rolled<this>>;
-        reroll({ minimize, maximize, async }: EvaluateRollParams): Rolled<this> | Promise<Rolled<this>>;
+        reroll({ minimize, maximize }?: EvaluateRollParams): Promise<Rolled<this>>;
 
         /* -------------------------------------------- */
         /*  Static Class Methods                        */
@@ -169,6 +211,9 @@ declare global {
          * @return The constructed Roll instance
          */
         static create(formula: string, data?: Record<string, unknown>, options?: RollOptions): Roll;
+
+        /** Get the default configured Roll class. */
+        static get defaultImplementation(): typeof Roll;
 
         /**
          * Transform an array of RollTerm objects into a cleaned string formula representation.
@@ -231,7 +276,7 @@ declare global {
         static replaceFormulaData(
             formula: string,
             data: Record<string, unknown>,
-            { missing, warn }?: { missing?: string; warn?: boolean }
+            { missing, warn }?: { missing?: string; warn?: boolean },
         ): string;
 
         /**
@@ -248,8 +293,8 @@ declare global {
          */
         protected static _splitParentheses(_formula: string): string[];
 
-        /** Handle closing of a parenthetical term to create a MathTerm expression with a function and arguments */
-        protected static _splitMathArgs(expression: string): MathTerm[];
+        /** Handle closing of a parenthetical term to create a FunctionTerm expression with a function and arguments */
+        protected static _splitMathArgs(expression: string): FunctionTerm[];
 
         /**
          * Split a formula by identifying its outer-most dice pool terms
@@ -278,7 +323,7 @@ declare global {
                 openSymbol?: string;
                 closeSymbol?: string;
                 onClose?: () => void | Promise<void>;
-            }
+            },
         ): string[];
 
         /**
@@ -321,7 +366,7 @@ declare global {
                 intermediate,
                 prior,
                 next,
-            }?: { intermediate?: boolean; prior?: RollTerm | string; next?: RollTerm | string }
+            }?: { intermediate?: boolean; prior?: RollTerm | string; next?: RollTerm | string },
         ): RollTerm;
 
         /* -------------------------------------------- */
@@ -357,17 +402,17 @@ declare global {
          *         or the Object of prepared chatData otherwise.
          */
         toMessage(
-            messageData: PreCreate<foundry.data.ChatMessageSource> | undefined,
-            { rollMode, create }: { rollMode: RollMode; create: false }
-        ): Promise<foundry.data.ChatMessageSource>;
+            messageData: PreCreate<foundry.documents.ChatMessageSource> | undefined,
+            { rollMode, create }: { rollMode?: RollMode | "roll"; create: false },
+        ): Promise<foundry.documents.ChatMessageSource>;
         toMessage(
-            messageData?: PreCreate<foundry.data.ChatMessageSource>,
-            { rollMode, create }?: { rollMode?: RollMode; create?: true }
+            messageData?: PreCreate<foundry.documents.ChatMessageSource>,
+            { rollMode, create }?: { rollMode?: RollMode | "roll"; create?: true },
         ): Promise<ChatMessage>;
         toMessage(
-            messageData?: PreCreate<foundry.data.ChatMessageSource>,
-            { rollMode, create }?: { rollMode?: RollMode; create?: boolean }
-        ): Promise<ChatMessage | foundry.data.ChatMessageSource>;
+            messageData?: PreCreate<foundry.documents.ChatMessageSource>,
+            { rollMode, create }?: { rollMode?: RollMode | "roll"; create?: boolean },
+        ): Promise<ChatMessage | foundry.documents.ChatMessageSource>;
 
         /* -------------------------------------------- */
         /*  Interface Helpers                           */
@@ -407,7 +452,7 @@ declare global {
          * @param json   Serialized JSON data representing the Roll
          * @return A reconstructed Roll instance
          */
-        static fromJSON<T extends Roll>(this: T, json: string): T;
+        static fromJSON<T extends Roll>(this: AbstractConstructorOf<T>, json: string): T;
 
         /**
          * Manually construct a Roll object by providing an explicit set of input terms
@@ -425,10 +470,10 @@ declare global {
         static fromTerms<T extends Roll>(this: ConstructorOf<T>, terms: RollTerm[], options?: RollOptions): T;
     }
 
-    type RollOptions = {
-        [key: string]: unknown;
+    interface RollOptions {
         flavor?: string;
-    };
+        [key: string]: JSONValue;
+    }
 
     interface RollJSON {
         class: string;
@@ -459,12 +504,20 @@ declare global {
     };
 
     interface EvaluateRollParams {
+        /** Minimize the result, obtaining the smallest possible value. */
         minimize?: boolean;
+        /** Maximize the result, obtaining the largest possible value. */
         maximize?: boolean;
-        async?: boolean;
+        /** If true, string terms will not cause an error to be thrown during evaluation. */
+        allowStrings?: boolean;
+        /** If false, force the use of non-interactive rolls and do not prompt the user to make manual rolls. */
+        allowInteractive?: boolean;
+    }
+
+    interface EvaluateRollSyncParams extends EvaluateRollParams {
+        strict?: boolean;
     }
 
     // Empty extended interface that can be expanded by the system without polluting Math itself
-    // eslint-disable-next-line @typescript-eslint/no-empty-interface
     interface RollMathProxy extends Math {}
 }

@@ -1,2 +1,1 @@
-import "./polygon-helpers";
-import "./source-polygon";
+import "./source-polygon.d.ts";

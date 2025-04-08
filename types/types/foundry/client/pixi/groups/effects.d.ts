@@ -1,3 +1,9 @@
+import type {
+    GlobalLightSource,
+    PointLightSource,
+    PointVisionSource,
+} from "../../../client-esm/canvas/sources/module.ts";
+
 export {};
 
 declare global {
@@ -11,11 +17,11 @@ declare global {
      *
      * @category - Canvas
      */
-    class EffectsCanvasGroup extends PIXI.Container {
+    class EffectsCanvasGroup extends CanvasGroup {
         constructor();
 
         /** The current global light source */
-        globalLightSource: LightSource<undefined>;
+        globalLightSource: GlobalLightSource;
 
         /** Whether to currently animate light sources. */
         animateLightSources: boolean;
@@ -24,22 +30,34 @@ declare global {
         animateVisionSources: boolean;
 
         /** A mapping of light sources which are active within the rendered Scene. */
-        lightSources: Collection<LightSource<AmbientLight | Token>>;
+        lightSources: Collection<PointLightSource<AmbientLight | Token>>;
 
         /** A Collection of vision sources which are currently active within the rendered Scene. */
-        visionSources: Collection<VisionSource<Token>>;
+        visionSources: Collection<PointVisionSource<Token>>;
+
+        /** A set of vision mask filters used in visual effects group */
+        visualEffectsMaskingFilters: Set<PIXI.Filter>;
+
+        /** A layer of background alteration effects which change the appearance of the primary group render texture. */
+        background: CanvasLayer;
+
+        /** A layer which adds illumination-based effects to the scene. */
+        illumination: CanvasLayer;
+
+        /** A layer which adds color-based effects to the scene. */
+        coloration: CanvasLayer;
+
+        /** A layer which adds darkness effects to the scene */
+        darkness: CanvasLayer;
 
         /** Clear all effects containers and animated sources. */
         clearEffects(): void;
-
-        /** Draw the component layers of the canvas group. */
-        draw(): Promise<void>;
 
         /** Initialize LightSource objects for all AmbientLightDocument instances that exist within the active Scene. */
         initializeLightSources(): void;
 
         /** Update the global light source which provide global illumination to the Scene. */
-        protected _updateGlobalLightSource(): LightSource<undefined>;
+        protected _updateGlobalLightSource(): PointLightSource<null>;
 
         /** Refresh the state and uniforms of all LightSource objects. */
         refreshLightSources(): void;
@@ -50,8 +68,21 @@ declare global {
         /** Refresh the active display of lighting. */
         refreshLighting(): void;
 
-        /** Perform a deconstruction workflow for this canvas group when the canvas is retired. */
-        tearDown(): Promise<void>;
+        /**
+         * Test whether the point is inside light.
+         * @param position      The point.
+         * @param elevation     The elevation of the point.
+         * @returns             Is inside light?
+         */
+        testInsideLight(position: Point, elevation: number): boolean;
+
+        /**
+         * Test whether the point is inside darkness.
+         * @param position      The point.
+         * @param elevation     The elevation of the point.
+         * @returns             Is inside a darkness?
+         */
+        testInsideDarkness(position: Point, elevation: number): boolean;
 
         /**
          * Activate vision masking for visual effects

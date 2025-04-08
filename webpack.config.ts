@@ -7,7 +7,9 @@ import webpack from "webpack";
 import { Configuration as WebpackDevServerConfiguration, Request } from "webpack-dev-server";
 import ForkTsCheckerWebpackPlugin from "fork-ts-checker-webpack-plugin";
 import TerserPlugin from "terser-webpack-plugin";
+// @ts-ignore
 import SimpleProgressWebpackPlugin from "simple-progress-webpack-plugin";
+// @ts-ignore
 import CopyPlugin from "copy-webpack-plugin";
 
 const buildMode = process.argv[3] === "production" ? "production" : "development";

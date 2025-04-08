@@ -83,7 +83,7 @@ declare global {
                 ctrlKey,
                 shiftKey,
                 repeat,
-            }?: { altKey?: boolean; ctrlKey?: boolean; shiftKey?: boolean; repeat?: boolean }
+            }?: { altKey?: boolean; ctrlKey?: boolean; shiftKey?: boolean; repeat?: boolean },
         ): KeyboardEvent;
 
         /**
@@ -168,7 +168,7 @@ declare global {
         protected _onCompositionEnd(event: CompositionEvent): void;
     }
 
-    type ModifierKey = typeof KeyboardManager["MODIFIER_KEYS"][keyof typeof KeyboardManager["MODIFIER_KEYS"]];
+    type ModifierKey = (typeof KeyboardManager.MODIFIER_KEYS)[keyof typeof KeyboardManager.MODIFIER_KEYS];
 
     interface KeyboardEventContext {
         event: KeyboardEvent;

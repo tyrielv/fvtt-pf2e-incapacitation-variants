@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "allowImportingTsExtensions": true,
     "baseUrl": ".",
     "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true,
@@ -8,7 +9,8 @@
       "dom",
       "dom.iterable"
     ],
-    "module": "CommonJS",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
     "noEmit": true,
     "noFallthroughCasesInSwitch": true,
     "noImplicitOverride": true,
@@ -60,10 +62,11 @@
     "strictFunctionTypes": true,
     "strictNullChecks": true,
     "strictPropertyInitialization": true,
-    "target": "es2018",
+    "target": "ESNext",
     "typeRoots": [
       "node_modules/@types",
-      "types/types/foundry"
+      "types/types/foundry",
+      "types"
     ],
     "types": [
       "jquery",
