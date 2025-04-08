@@ -4,69 +4,73 @@
  * attack could be an option that is not a trait.
  * @category PF2
  */
-declare class PredicatePF2e implements RawPredicate {
-    /** Every statement in the array is true */
-    all: PredicateStatement[];
-    /** At least one statement in the array is true */
-    any: PredicateStatement[];
-    /** None of the statements in the array are true */
-    not: PredicateStatement[];
-    /** A label for this predicate, to be displayed in certain (currently limited) contexts */
-    label?: string;
+declare class Predicate extends Array<PredicateStatement> {
+    #private;
     /** Is the predicate data structurally valid? */
-    isValid: boolean;
-    /** Test if the given predicate passes for the given list of options. */
-    static test(predicate: RawPredicate | undefined, options: Set<string> | string[]): boolean;
-    constructor(param?: RawPredicate);
+    readonly isValid: boolean;
+    constructor(...statements: PredicateStatement[] | [PredicateStatement[]]);
     /** Structurally validate the predicates */
-    static validate(raw: unknown): raw is RawPredicate;
+    static isValid(statements: unknown): statements is PredicateStatement[];
+    /** Is this an array of predicatation statements? */
+    static isArray(statements: unknown): statements is PredicateStatement[];
+    /** Test if the given predicate passes for the given list of options. */
+    static test(predicate: PredicateStatement[] | undefined, options: Set<string> | string[]): boolean;
     /** Test this predicate against a domain of discourse */
     test(options: Set<string> | string[]): boolean;
-    /** Is the provided statement true? */
-    private isTrue;
-    private testBinaryOp;
-    /** Is the provided compound statement true? */
-    private testCompound;
+    toObject(): RawPredicate;
+    clone(): Predicate;
 }
-declare type EqualTo = {
+declare class StatementValidator {
+    #private;
+    static isStatement(statement: unknown): statement is PredicateStatement;
+    static isAtomic(statement: unknown): statement is Atom;
+    static isBinaryOp(statement: unknown): statement is BinaryOperation;
+    static isCompound(statement: unknown): statement is CompoundStatement;
+}
+type EqualTo = {
     eq: [string, string | number];
 };
-declare type GreaterThan = {
+type GreaterThan = {
     gt: [string, string | number];
 };
-declare type GreaterThanEqualTo = {
+type GreaterThanEqualTo = {
     gte: [string, string | number];
 };
-declare type LessThan = {
+type LessThan = {
     lt: [string, string | number];
 };
-declare type LessThanEqualTo = {
+type LessThanEqualTo = {
     lte: [string, string | number];
 };
-declare type BinaryOperation = EqualTo | GreaterThan | GreaterThanEqualTo | LessThan | LessThanEqualTo;
-declare type Atom = string | BinaryOperation;
-declare type Conjunction = {
+type BinaryOperation = EqualTo | GreaterThan | GreaterThanEqualTo | LessThan | LessThanEqualTo;
+type Atom = string | BinaryOperation;
+type Conjunction = {
     and: PredicateStatement[];
 };
-declare type Disjunction = {
+type Disjunction = {
     or: PredicateStatement[];
 };
-declare type Negation = {
+type ExclusiveDisjunction = {
+    xor: PredicateStatement[];
+};
+type Negation = {
     not: PredicateStatement;
 };
-declare type JointDenial = {
+type AlternativeDenial = {
+    nand: PredicateStatement[];
+};
+type JointDenial = {
     nor: PredicateStatement[];
 };
-declare type Conditional = {
+type Conditional = {
     if: PredicateStatement;
     then: PredicateStatement;
 };
-declare type CompoundStatement = Conjunction | Disjunction | JointDenial | Negation | Conditional;
-declare type PredicateStatement = Atom | CompoundStatement;
-interface RawPredicate {
-    all?: PredicateStatement[];
-    any?: PredicateStatement[];
-    not?: PredicateStatement[];
-    label?: string;
-}
-export { PredicateStatement, PredicatePF2e, RawPredicate };
+type Biconditional = {
+    iff: PredicateStatement[];
+};
+type CompoundStatement = Conjunction | Disjunction | ExclusiveDisjunction | AlternativeDenial | JointDenial | Negation | Conditional | Biconditional;
+type PredicateStatement = Atom | CompoundStatement;
+type RawPredicate = PredicateStatement[];
+export { Predicate, StatementValidator };
+export type { PredicateStatement, RawPredicate };

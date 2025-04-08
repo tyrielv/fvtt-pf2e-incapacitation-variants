@@ -1,41 +1,37 @@
-/// <reference types="jquery" />
+/// <reference types="jquery" resolution-mode="require"/>
+/// <reference types="jquery" resolution-mode="require"/>
 /// <reference types="tooltipster" />
-import { BaseWeaponType } from "@item/weapon/types";
-import { PartialSettingsData, SettingsMenuPF2e } from "../menu";
-import "@yaireo/tagify/src/tagify.scss";
-export declare type ConfigPF2eHomebrewRecord = typeof HomebrewElements.SETTINGS[number];
-export declare type HomebrewSettingsKey = `homebrew.${ConfigPF2eHomebrewRecord}`;
-export interface HomebrewTag<T extends ConfigPF2eHomebrewRecord = ConfigPF2eHomebrewRecord> {
-    id: T extends "baseWeapons" ? BaseWeaponType : T extends Exclude<ConfigPF2eHomebrewRecord, "baseWeapons"> ? keyof ConfigPF2e["PF2E"][T] : never;
-    value: string;
-}
-export declare class HomebrewElements extends SettingsMenuPF2e {
+import "@yaireo/tagify/dist/tagify.css";
+import { PartialSettingsData, SettingsMenuPF2e } from "../menu.ts";
+import { CustomDamageData, HomebrewElementsSheetData, HomebrewKey, HomebrewTag, HomebrewTraitKey, LanguageSettings, ModuleHomebrewData } from "./data.ts";
+import { ReservedTermsRecord } from "./helpers.ts";
+import { LanguagesManager } from "./languages.ts";
+declare class HomebrewElements extends SettingsMenuPF2e {
+    #private;
     static readonly namespace = "homebrew";
-    /** Whether this is the first time the homebrew tags will have been injected into CONFIG and actor derived data */
-    private initialRefresh;
-    static readonly SETTINGS: readonly ["creatureTraits", "featTraits", "languages", "magicSchools", "spellTraits", "weaponCategories", "weaponGroups", "baseWeapons", "weaponTraits", "equipmentTraits"];
-    /** Homebrew elements from some of the above records are propagated to related records */
-    private secondaryRecords;
-    static get defaultOptions(): FormApplicationOptions & {
-        title: string;
-        id: string;
-        template: string;
-        width: number;
-        height: string;
-        closeOnSubmit: boolean;
-    } & {
-        template: string;
-    };
-    protected static get settings(): Record<ConfigPF2eHomebrewRecord, PartialSettingsData>;
-    activateListeners($form: JQuery<HTMLFormElement>): void;
-    protected _getSubmitData(updateData?: Record<string, unknown>): Record<string, unknown>;
-    protected _updateObject(_event: Event, data: Record<ConfigPF2eHomebrewRecord, HomebrewTag[]>): Promise<void>;
-    /** Prepare and run a migration for each set of tag deletions from a tag map */
-    private processDeletions;
-    /** Assign the homebrew elements to their respective `CONFIG.PF2E` objects */
-    refreshTags(): void;
-    /** Register homebrew elements stored in a prescribed location in module flags */
-    registerModuleTags(): void;
-    private getConfigRecord;
-    private updateConfigRecords;
+    languagesManager: LanguagesManager;
+    static get reservedTerms(): ReservedTermsRecord;
+    static get moduleData(): ModuleHomebrewData;
+    static get SETTINGS(): string[];
+    static get defaultOptions(): FormApplicationOptions;
+    protected static get settings(): Record<HomebrewKey, PartialSettingsData>;
+    activateListeners($html: JQuery): void;
+    getData(): Promise<HomebrewElementsSheetData>;
+    /** Tagify sets an empty input field to "" instead of "[]", which later causes the JSON parse to throw an error */
+    protected _onSubmit(event: Event, options?: OnSubmitFormOptions): Promise<Record<string, unknown> | false>;
+    protected _getSubmitData(updateData?: Record<string, unknown> | undefined): Record<string, unknown>;
+    protected _updateObject(event: Event, data: Record<HomebrewTraitKey, HomebrewTag[]>): Promise<void>;
+    onInit(): void;
 }
+type HomebrewSubmitData = {
+    damageTypes: CustomDamageData[];
+    languages: HomebrewTag<"languages">[];
+    languageRarities: LanguageSettings;
+} & Record<string, unknown> & {
+    clear(): void;
+};
+interface HomebrewElements extends SettingsMenuPF2e {
+    constructor: typeof HomebrewElements;
+    cache: HomebrewSubmitData;
+}
+export { HomebrewElements };

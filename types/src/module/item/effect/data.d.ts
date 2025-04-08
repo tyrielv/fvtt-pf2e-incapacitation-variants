@@ -1,43 +1,35 @@
-import { EffectBadge } from "@item/abstract-effect";
-import { BaseItemDataPF2e, BaseItemSourcePF2e, ItemFlagsPF2e, ItemLevelData, ItemSystemData, ItemSystemSource } from "@item/data/base";
-import { EffectPF2e } from ".";
-declare type EffectSource = BaseItemSourcePF2e<"effect", EffectSystemSource> & {
+import { AbstractEffectSystemData, AbstractEffectSystemSource, DurationData, EffectAuraData, EffectBadge, EffectBadgeSource, EffectContextData } from "@item/abstract-effect/index.ts";
+import { BaseItemSourcePF2e, ItemFlagsPF2e } from "@item/base/data/system.ts";
+type EffectSource = BaseItemSourcePF2e<"effect", EffectSystemSource> & {
     flags: DeepPartial<EffectFlags>;
 };
-declare type EffectData = Omit<EffectSource, "system" | "effects" | "flags"> & BaseItemDataPF2e<EffectPF2e, "effect", EffectSystemData, EffectSource> & {
-    flags: EffectFlags;
-};
-declare type EffectFlags = ItemFlagsPF2e & {
+type EffectFlags = ItemFlagsPF2e & {
     pf2e: {
         aura?: EffectAuraData;
     };
 };
-interface EffectSystemSource extends ItemSystemSource, ItemLevelData {
+interface EffectSystemSource extends AbstractEffectSystemSource {
+    level: {
+        value: number;
+    };
     start: {
         value: number;
         initiative: number | null;
     };
-    duration: {
-        value: number;
-        unit: "rounds" | "minutes" | "hours" | "days" | "encounter" | "unlimited";
+    duration: DurationData & {
         sustained: boolean;
-        expiry: EffectExpiryType | null;
     };
     tokenIcon: {
         show: boolean;
     };
-    target: string | null;
-    expired?: boolean;
+    unidentified: boolean;
+    /** A numeric value or dice expression of some rules significance to the effect */
+    badge: EffectBadgeSource | null;
+    /** Origin, target, and roll context of the action that spawned this effect */
+    context: EffectContextData | null;
+}
+interface EffectSystemData extends Omit<EffectSystemSource, "badge" | "description" | "fromSpell">, Omit<AbstractEffectSystemData, "level"> {
+    expired: boolean;
     badge: EffectBadge | null;
 }
-interface EffectSystemData extends EffectSystemSource, ItemSystemData {
-    expired: boolean;
-    remaining: string;
-}
-declare type EffectExpiryType = "turn-start" | "turn-end";
-interface EffectAuraData {
-    slug: string;
-    origin: ActorUUID | TokenDocumentUUID;
-    removeOnExit: boolean;
-}
-export { EffectData, EffectExpiryType, EffectFlags, EffectSource, EffectSystemData };
+export type { EffectFlags, EffectSource, EffectSystemData };

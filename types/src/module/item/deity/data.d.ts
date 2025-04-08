@@ -1,29 +1,29 @@
-import { SkillAbbreviation } from "@actor/creature/data";
-import { Alignment } from "@actor/creature/types";
-import { AbilityString } from "@actor/types";
-import { BaseItemDataPF2e, BaseItemSourcePF2e, ItemSystemSource } from "@item/data/base";
-import { BaseWeaponType } from "@item/weapon/types";
-import type { DeityPF2e } from "./document";
-import { DeityDomain } from "./types";
-declare type DeitySource = BaseItemSourcePF2e<"deity", DeitySystemSource>;
-declare type DeityData = Omit<DeitySource, "system" | "effects" | "flags"> & BaseItemDataPF2e<DeityPF2e, "deity", DeitySystemData, DeitySource>;
-interface DeitySystemSource extends ItemSystemSource {
-    category: "deity" | "pantheon" | "philosophy";
-    alignment: {
-        own: Alignment | null;
-        follower: Alignment[];
-    };
+import { AttributeString, SkillSlug } from "@actor/types.ts";
+import { BaseItemSourcePF2e, ItemSystemData, ItemSystemSource, OtherTagsOnly } from "@item/base/data/system.ts";
+import { BaseWeaponType } from "@item/weapon/types.ts";
+import { DeityDomain, Sanctification } from "./types.ts";
+type DeitySource = BaseItemSourcePF2e<"deity", DeitySystemSource>;
+type DeitySystemSource = ItemSystemSource & {
+    category: DeityCategory;
+    sanctification: DeitySanctification | null;
     domains: {
         primary: DeityDomain[];
         alternate: DeityDomain[];
     };
     font: DivineFonts;
-    ability: AbilityString[];
-    skill: SkillAbbreviation | null;
+    attribute: AttributeString[];
+    skill: SkillSlug[] | null;
     weapons: BaseWeaponType[];
     spells: Record<number, ItemUUID>;
-    traits?: never;
+    level?: never;
+    traits: OtherTagsOnly;
+};
+type DeityCategory = "deity" | "pantheon" | "covenant" | "philosophy";
+type DeitySanctification = {
+    modal: "can" | "must";
+    what: Sanctification[];
+};
+type DivineFonts = ["harm"] | ["heal"] | ["harm", "heal"] | never[];
+interface DeitySystemData extends Omit<DeitySystemSource, "description">, Omit<ItemSystemData, "level" | "traits"> {
 }
-declare type DivineFonts = ["harm"] | ["heal"] | ["harm", "heal"] | never[];
-declare type DeitySystemData = DeitySystemSource;
-export { DeityData, DeitySource, DeitySystemData, DeitySystemSource };
+export type { DeityCategory, DeitySanctification, DeitySource, DeitySystemData, DeitySystemSource };

@@ -1,17 +1,16 @@
-/// <reference types="jquery" />
+/// <reference types="jquery" resolution-mode="require"/>
+/// <reference types="jquery" resolution-mode="require"/>
 /// <reference types="tooltipster" />
 import { DateTime } from "luxon";
-import { animateDarkness } from "./animate-darkness";
+import { animateDarkness } from "./animate-darkness.ts";
 interface WorldClockData {
     date: string;
     time: string;
-    options?: {};
+    options?: object;
     user: User;
     sign: "+" | "-";
 }
 export declare class WorldClock extends Application {
-    /** Localization keys */
-    private readonly translations;
     /** Is the ctrl key currently held down? */
     private ctrlKeyDown;
     readonly animateDarkness: typeof animateDarkness;
@@ -26,12 +25,7 @@ export declare class WorldClock extends Application {
     get worldCreatedOn(): DateTime;
     /** The current date and time of the game world */
     get worldTime(): DateTime;
-    static get defaultOptions(): ApplicationOptions & {
-        id: string;
-        width: number;
-        template: string;
-        title: string;
-    };
+    static get defaultOptions(): ApplicationOptions;
     /** The era in the game */
     private get era();
     /** The year in the game */
@@ -48,5 +42,7 @@ export declare class WorldClock extends Application {
     close(options?: {
         force?: boolean;
     }): Promise<void>;
+    /** Create a message informing the user that scene darkness is synced to world time */
+    static createSyncedMessage(): HTMLSpanElement;
 }
 export {};

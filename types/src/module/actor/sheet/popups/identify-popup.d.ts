@@ -1,17 +1,18 @@
-/// <reference types="jquery" />
+/// <reference types="jquery" resolution-mode="require"/>
+/// <reference types="jquery" resolution-mode="require"/>
 /// <reference types="tooltipster" />
-import { IdentifyAlchemyDCs, IdentifyMagicDCs, GenericIdentifyDCs } from "@item/identification";
-import { PhysicalItemPF2e } from "@item/physical";
+import { IdentifyAlchemyDCs, IdentifyMagicDCs } from "@item/identification.ts";
+import type { PhysicalItemPF2e } from "@item/physical/index.ts";
 export declare class IdentifyItemPopup extends FormApplication<PhysicalItemPF2e> {
     static get defaultOptions(): FormApplicationOptions;
-    get item(): PhysicalItemPF2e;
+    dcs: IdentifyMagicDCs | IdentifyAlchemyDCs;
     getData(): Promise<IdentifyPopupData>;
-    activateListeners($form: JQuery<HTMLFormElement>): void;
+    activateListeners($html: JQuery): void;
     protected _updateObject(_event: Event, formData: Record<string, unknown>): Promise<void>;
 }
 interface IdentifyPopupData extends FormApplicationData {
     isMagic: boolean;
     isAlchemical: boolean;
-    dcs: GenericIdentifyDCs | IdentifyMagicDCs | IdentifyAlchemyDCs;
+    dcs: IdentifyMagicDCs | IdentifyAlchemyDCs;
 }
 export {};

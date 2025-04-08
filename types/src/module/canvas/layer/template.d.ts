@@ -1,8 +1,9 @@
-import { MeasuredTemplatePF2e } from "..";
-export declare class TemplateLayerPF2e<TTemplate extends MeasuredTemplatePF2e = MeasuredTemplatePF2e> extends TemplateLayer<TTemplate> {
-    /** Can be removed once https://gitlab.com/foundrynet/foundryvtt/-/issues/7132 is closed */
-    _onDragLeftStart(event: PlaceablesLayerEvent<TTemplate>): Promise<TTemplate | void>;
-    /** Originally by Furyspark for the PF1e system */
-    protected _onDragLeftMove(event: PlaceablesLayerEvent<TTemplate>): void;
-    protected _onMouseWheel(event: WheelEvent): Promise<TTemplate["document"] | undefined> | void;
+import type { MeasuredTemplatePF2e } from "../measured-template.ts";
+export declare class TemplateLayerPF2e<TObject extends MeasuredTemplatePF2e = MeasuredTemplatePF2e> extends TemplateLayer<TObject> {
+    #private;
+    createPreview(createData: Record<string, unknown>): Promise<TObject>;
+    /** Overriden to snap according to the dragged template's type */
+    getSnappedPoint(point: Point): Point;
+    protected _onDragLeftMove(event: PlaceablesLayerPointerEvent<TObject>): void;
+    protected _onMouseWheel(event: WheelEvent): Promise<TObject> | void;
 }

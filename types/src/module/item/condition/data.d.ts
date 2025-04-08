@@ -1,16 +1,15 @@
-import { CONDITION_SLUGS } from "@actor/values";
-import { BaseItemDataPF2e, BaseItemSourcePF2e, ItemSystemData, ItemSystemSource } from "@item/data/base";
-import { ConditionPF2e } from ".";
-declare type ConditionSource = BaseItemSourcePF2e<"condition", ConditionSystemSource>;
-declare type ConditionData = Omit<ConditionSource, "system" | "effects" | "flags"> & BaseItemDataPF2e<ConditionPF2e, "condition", ConditionSystemData, ConditionSource>;
-interface ConditionSystemSource extends ItemSystemSource {
+import { AbstractEffectSystemData, AbstractEffectSystemSource, DurationData } from "@item/abstract-effect/data.ts";
+import { BaseItemSourcePF2e } from "@item/base/data/system.ts";
+import { DamageType } from "@system/damage/index.ts";
+import type { DamageRoll } from "@system/damage/roll.ts";
+import { ConditionSlug } from "./types.ts";
+type ConditionSource = BaseItemSourcePF2e<"condition", ConditionSystemSource>;
+interface ConditionSystemSource extends AbstractEffectSystemSource {
     slug: ConditionSlug;
-    active: boolean;
-    removable: boolean;
     references: {
         parent?: {
             id: string;
-            type: "status" | "condition" | "feat" | "weapon" | "armor" | "consumable" | "equipment" | "spell";
+            type: string;
         };
         children: {
             id: string;
@@ -24,79 +23,37 @@ interface ConditionSystemSource extends ItemSystemSource {
             id: string;
             type: "condition";
         }[];
-        /**
-         * This status is immune, and thereby inactive, from the following list.
-         */
-        immunityFrom: {
-            id: string;
-            type: "status" | "condition" | "feat" | "weapon" | "armor" | "consumable" | "equipment" | "spell";
-        }[];
-    };
-    hud: {
-        statusName: string;
-        img: {
-            useStatusName: boolean;
-            value: ImagePath;
-        };
-        selectable: boolean;
     };
     duration: {
-        perpetual: boolean;
         value: number;
-        text: string;
     };
-    modifiers: [
-        {
-            type: "ability" | "proficiency" | "status" | "circumstance" | "item" | "untyped";
-            name: string;
-            group: string;
-            value?: number;
-        }
-    ];
-    base: ConditionSlug;
-    group: string;
+    persistent?: PersistentSourceData;
+    group: string | null;
     value: ConditionValueData;
-    sources: {
-        hud: boolean;
-    };
-    alsoApplies: {
-        linked: [
-            {
-                condition: ConditionSlug;
-                value?: number;
-            }
-        ];
-        unlinked: [
-            {
-                condition: ConditionSlug;
-                value?: number;
-            }
-        ];
-    };
     overrides: string[];
-    traits?: never;
+    context?: never;
+    level?: never;
 }
-declare type ConditionSystemData = ItemSystemData & ConditionSystemSource;
-declare type ConditionValueData = {
+interface PersistentSourceData {
+    formula: string;
+    damageType: DamageType;
+    dc: number;
+    /** Whether this damage was multiplied due to a critical hit */
+    criticalHit?: boolean;
+}
+interface ConditionSystemData extends Omit<ConditionSystemSource, "description" | "fromSpell">, Omit<AbstractEffectSystemData, "level" | "slug"> {
+    persistent?: PersistentDamageData;
+    duration: DurationData;
+}
+interface PersistentDamageData extends PersistentSourceData {
+    damage: DamageRoll;
+    expectedValue: number;
+}
+type ConditionValueData = {
     isValued: true;
-    immutable: boolean;
     value: number;
-    modifiers: [
-        {
-            value: number;
-            source: string;
-        }
-    ];
 } | {
     isValued: false;
-    immutable: boolean;
     value: null;
-    modifiers: [
-        {
-            value: number;
-            source: string;
-        }
-    ];
 };
-declare type ConditionSlug = SetElement<typeof CONDITION_SLUGS>;
-export { ConditionData, ConditionSource, ConditionSlug };
+export type { ConditionSource, ConditionSystemData, ConditionSystemSource, PersistentDamageData, PersistentSourceData };

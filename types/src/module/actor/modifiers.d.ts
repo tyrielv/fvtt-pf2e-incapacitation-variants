@@ -1,37 +1,29 @@
-import { CharacterPF2e, NPCPF2e } from "@actor";
-import { AbilityString } from "@actor/types";
-import { RollNotePF2e } from "@module/notes";
-import { DamageDieSize, DamageType } from "@system/damage";
-import { DegreeOfSuccessAdjustment } from "@system/degree-of-success";
-import { PredicatePF2e, RawPredicate } from "@system/predication";
+import type { ActorPF2e, CharacterPF2e, NPCPF2e } from "@actor";
+import type { AttributeString } from "@actor/types.ts";
+import type { ItemPF2e } from "@item";
+import { ZeroToFour } from "@module/data.ts";
+import type { RollNotePF2e } from "@module/notes.ts";
+import type { RuleElementPF2e } from "@module/rules/index.ts";
+import { DamageAlteration } from "@module/rules/rule-element/damage-alteration/alteration.ts";
+import type { DamageCategoryUnique, DamageDiceFaces, DamageDieSize, DamageType } from "@system/damage/types.ts";
+import { Predicate, RawPredicate } from "@system/predication.ts";
 declare const PROFICIENCY_RANK_OPTION: readonly ["proficiency:untrained", "proficiency:trained", "proficiency:expert", "proficiency:master", "proficiency:legendary"];
 declare function ensureProficiencyOption(options: Set<string>, rank: number): void;
-/**
- * The canonical pathfinder modifier types; modifiers of the same type do not stack (except for 'untyped' modifiers,
- * which fully stack).
- */
-declare const MODIFIER_TYPE: {
-    readonly ABILITY: "ability";
-    readonly PROFICIENCY: "proficiency";
-    readonly CIRCUMSTANCE: "circumstance";
-    readonly ITEM: "item";
-    readonly POTENCY: "potency";
-    readonly STATUS: "status";
-    readonly UNTYPED: "untyped";
-};
-declare const MODIFIER_TYPES: Set<"item" | "status" | "untyped" | "ability" | "circumstance" | "potency" | "proficiency">;
-declare type ModifierType = SetElement<typeof MODIFIER_TYPES>;
-interface BaseRawModifier {
+declare const MODIFIER_TYPES: Set<"untyped" | "item" | "ability" | "circumstance" | "potency" | "proficiency" | "status">;
+type ModifierType = SetElement<typeof MODIFIER_TYPES>;
+interface RawModifier {
     /** An identifier for this modifier; should generally be a localization key (see en.json). */
     slug?: string;
+    /** The domains of discourse to which this modifier belongs */
+    domains?: string[];
     /** The display name of this modifier; can be a localization key (see en.json). */
     label: string;
     /** The actual numeric benefit/penalty that this modifier provides. */
-    modifier?: number;
+    modifier: number;
     /** The type of this modifier - modifiers of the same type do not stack (except for `untyped` modifiers). */
-    type?: string;
+    type?: ModifierType;
     /** If the type is "ability", this should be set to a particular ability */
-    ability?: AbilityString | null;
+    ability?: AttributeString | null;
     /** Numeric adjustments to apply */
     adjustments?: ModifierAdjustment[];
     /** If true, this modifier will be applied to the final roll; if false, it will be ignored. */
@@ -43,32 +35,29 @@ interface BaseRawModifier {
     /** If true, this modifier is a custom player-provided modifier. */
     custom?: boolean;
     /** The damage type that this modifier does, if it modifies a damage roll. */
-    damageType?: string | null;
+    damageType?: DamageType | null;
     /** The damage category */
-    damageCategory?: string | null;
-    /** A predicate which determines when this modifier is active. */
+    damageCategory?: DamageCategoryUnique | null;
+    /** A predicate that determines when this modifier is active */
     predicate?: RawPredicate;
     /** If true, this modifier is only active on a critical hit. */
     critical?: boolean | null;
-    /** Any notes about this modifier. */
-    notes?: string;
-    /** The list of traits that this modifier gives to the underlying attack, if any. */
-    traits?: string[];
+    /** A list of tags associated with this modifier */
+    tags?: string[];
     /** Hide this modifier in UIs if it is disabled */
     hideIfDisabled?: boolean;
+    /** Whether to use this bonus/penalty/modifier even if it isn't the greatest magnitude */
+    force?: boolean;
 }
 interface ModifierAdjustment {
     /** A slug for matching against modifiers: `null` will match against all modifiers within a selector */
     slug: string | null;
-    predicate: PredicatePF2e;
+    test: (options: string[] | Set<string>) => boolean;
     damageType?: DamageType;
     relabel?: string;
     suppress?: boolean;
     getNewValue?: (current: number) => number;
     getDamageType?: (current: DamageType | null) => DamageType | null;
-}
-interface RawModifier extends BaseRawModifier {
-    modifier: number;
 }
 interface DeferredValueParams {
     /** An object to merge into roll data for `Roll.replaceFormulaData` */
@@ -78,28 +67,44 @@ interface DeferredValueParams {
     /** Roll Options to get against a predicate (if available) */
     test?: string[] | Set<string>;
 }
-declare type DeferredValue<T> = (options?: DeferredValueParams) => T;
+interface TestableDeferredValueParams extends DeferredValueParams {
+    test: string[] | Set<string>;
+}
+interface DeferredDamageDiceOptions extends TestableDeferredValueParams {
+    selectors: string[];
+}
+type DeferredValue<T> = (options?: DeferredValueParams) => T | null;
+type DeferredPromise<T> = (options?: DeferredValueParams) => Promise<T | null>;
 /** Represents a discrete modifier, bonus, or penalty, to a statistic or check. */
 declare class ModifierPF2e implements RawModifier {
     #private;
     slug: string;
     label: string;
+    domains: string[];
     /** The value of the modifier */
     modifier: number;
     type: ModifierType;
-    ability: AbilityString | null;
+    ability: AttributeString | null;
     adjustments: ModifierAdjustment[];
+    alterations: DamageAlteration[];
+    force: boolean;
     enabled: boolean;
     ignored: boolean;
+    /** The originating rule element of this modifier, if any: used to retrieve "parent" item roll options */
+    rule: RuleElementPF2e | null;
     source: string | null;
     custom: boolean;
     damageType: DamageType | null;
-    damageCategory: string | null;
-    predicate: PredicatePF2e;
+    damageCategory: DamageCategoryUnique | null;
+    predicate: Predicate;
     critical: boolean | null;
-    traits: string[];
-    notes: string;
+    tags: string[];
     hideIfDisabled: boolean;
+    /**
+     * The "category" of modifier (a misnomer since bonuses and penalties aren't modifiers):
+     * Recorded before adjustments in case of adjustment to zero
+     */
+    kind: "bonus" | "penalty" | "modifier";
     /**
      * Create a new modifier.
      * Legacy parameters:
@@ -112,53 +117,71 @@ declare class ModifierPF2e implements RawModifier {
      */
     constructor(args: ModifierObjectParams);
     constructor(...args: ModifierOrderedParams);
+    get category(): this["damageCategory"];
+    get value(): number;
+    get signedValue(): string;
+    /**
+     * Apply damage alterations: must be called externally by client code that knows this is a damage modifier.
+     * @param options.item An item (typically a weapon or spell) producing damage as part of an action
+     * @param options.test An `Array` or `Set` of roll options for use in predication testing
+     */
+    applyDamageAlterations(options: {
+        item: ItemPF2e<ActorPF2e>;
+        test: string[] | Set<string>;
+    }): void;
     /** Return a copy of this ModifierPF2e instance */
-    clone(options?: {
-        test?: Set<string> | string[];
+    clone(data?: Partial<ModifierObjectParams>, options?: {
+        test?: Set<string> | string[] | null;
     }): ModifierPF2e;
     /**
      * Get roll options for this modifier. The current data structure makes for occasional inability to distinguish
      * bonuses and penalties.
      */
-    getRollOptions(): Set<string>;
+    getRollOptions(): string[];
     /** Sets the ignored property after testing the predicate */
     test(options: string[] | Set<string>): void;
     toObject(): Required<RawModifier>;
     toString(): string;
 }
-declare type ModifierObjectParams = RawModifier & {
+interface ModifierObjectParams extends RawModifier {
     name?: string;
-};
-declare type ModifierOrderedParams = [
+    rule?: RuleElementPF2e | null;
+    alterations?: DamageAlteration[];
+}
+type ModifierOrderedParams = [
     slug: string,
     modifier: number,
-    type?: string,
+    type?: ModifierType,
     enabled?: boolean,
     ignored?: boolean,
     source?: string,
     notes?: string
 ];
 /**
- * Create a modifier from a given ability type and score.
- * @param ability str = Strength, dex = Dexterity, con = Constitution, int = Intelligence, wis = Wisdom, cha = Charisma
- * @param score The score of this ability.
- * @returns The modifier provided by the given ability score.
+ * Create a modifier for a given attribute type.
+ * @returns The modifier of the given attribute
  */
-declare function createAbilityModifier({ actor, ability, domains }: CreateAbilityModifierParams): ModifierPF2e;
+declare function createAttributeModifier({ actor, attribute, domains, max }: CreateAbilityModifierParams): ModifierPF2e;
 interface CreateAbilityModifierParams {
     actor: CharacterPF2e | NPCPF2e;
-    ability: AbilityString;
+    attribute: AttributeString;
     domains: string[];
+    /** An optional maximum for this ability modifier */
+    max?: number;
 }
-declare const ProficiencyModifier: {
-    /**
-     * Create a modifier for a given proficiency level of some ability.
-     * @param level The level of the character which this modifier is being applied to.
-     * @param rank 0 = untrained, 1 = trained, 2 = expert, 3 = master, 4 = legendary
-     * @returns The modifier for the given proficiency rank and character level.
-     */
-    fromLevelAndRank: (level: number, rank: number) => ModifierPF2e;
-};
+/**
+ * Create a modifier for a given proficiency level of some ability.
+ * @returns The modifier for the given proficiency rank and character level.
+ */
+declare function createProficiencyModifier({ actor, rank, domains, level, addLevel, }: CreateProficiencyModifierParams): ModifierPF2e;
+interface CreateProficiencyModifierParams {
+    actor: ActorPF2e;
+    rank: ZeroToFour;
+    domains: string[];
+    /** If given, use this value instead of actor.level */
+    level?: number;
+    addLevel?: boolean;
+}
 /**
  * Applies the modifier stacking rules and calculates the total modifier. This will mutate the
  * provided modifiers, setting the 'enabled' field based on whether or not the modifiers are active.
@@ -173,8 +196,10 @@ declare function applyStackingRules(modifiers: ModifierPF2e[]): number;
  * of each type is applied to the total modifier.
  */
 declare class StatisticModifier {
-    /** The name of this collection of modifiers for a statistic. */
-    name: string;
+    /** The slug of this collection of modifiers for a statistic. */
+    slug: string;
+    /** The display label of this statistic */
+    label?: string;
     /** The list of modifiers which affect the statistic. */
     protected _modifiers: ModifierPF2e[];
     /** The total modifier for the statistic, after applying stacking rules. */
@@ -183,38 +208,39 @@ declare class StatisticModifier {
     breakdown: string;
     /** Optional notes, which are often added to statistic modifiers */
     notes?: RollNotePF2e[];
-    adjustments?: DegreeOfSuccessAdjustment[];
-    /** Allow decorating this object with any needed extra fields. <-- ಠ_ಠ */
-    [key: string]: any;
+    /** Roll-option domains associated with this statistic */
+    domains?: string[];
     /**
-     * @param name The name of this collection of statistic modifiers.
+     * @param slug The name of this collection of statistic modifiers.
      * @param modifiers All relevant modifiers for this statistic.
      * @param rollOptions Roll options used for initial total calculation
      */
-    constructor(name: string, modifiers?: ModifierPF2e[], rollOptions?: string[] | Set<string>);
-    /** Get the list of all modifiers in this collection (as a read-only list). */
-    get modifiers(): readonly ModifierPF2e[];
+    constructor(slug: string, modifiers?: ModifierPF2e[], rollOptions?: string[] | Set<string>);
+    /** Get the list of all modifiers in this collection */
+    get modifiers(): ModifierPF2e[];
     /** Add a modifier to the end of this collection. */
     push(modifier: ModifierPF2e): number;
     /** Add a modifier to the beginning of this collection. */
     unshift(modifier: ModifierPF2e): number;
     /** Delete a modifier from this collection by name or reference */
-    delete(modifierName: string | ModifierPF2e): boolean;
+    delete(modifierSlug: string | ModifierPF2e): boolean;
     /** Obtain the total modifier, optionally retesting predicates, and finally applying stacking rules. */
     calculateTotal(rollOptions?: Set<string>): void;
-    private applyAdjustments;
 }
+declare function adjustModifiers(modifiers: ModifierPF2e[], rollOptions: Set<string>): void;
 /**
  * Represents the list of modifiers for a specific check.
  * @category PF2
  */
 declare class CheckModifier extends StatisticModifier {
     /**
-     * @param name The name of this check modifier.
-     * @param statistic The statistic modifier to copy fields from.
-     * @param modifiers Additional modifiers to add to this check.
+     * @param slug The unique slug of this check modifier
+     * @param statistic The statistic modifier to copy fields from
+     * @param modifiers Additional modifiers to add to this check
      */
-    constructor(name: string, statistic: StatisticModifier, modifiers?: ModifierPF2e[], rollOptions?: string[]);
+    constructor(slug: string, statistic: {
+        modifiers: readonly ModifierPF2e[];
+    }, modifiers?: ModifierPF2e[], rollOptions?: string[] | Set<string>);
 }
 interface DamageDiceOverride {
     /** Upgrade the damage dice to the next higher size (maximum d12) */
@@ -228,49 +254,56 @@ interface DamageDiceOverride {
     /** Override the number of damage dice */
     diceNumber?: number;
 }
-/**
- * Represents extra damage dice for one or more weapons or attack actions.
- * @category PF2
- */
-declare class DiceModifierPF2e implements BaseRawModifier {
+type PartialParameters = Partial<Omit<DamageDicePF2e, "predicate">> & Pick<DamageDicePF2e, "selector" | "slug">;
+interface DamageDiceParameters extends PartialParameters {
+    predicate?: RawPredicate;
+}
+declare class DamageDicePF2e {
+    /** A selector of an actor's associated damaging statistic  */
+    selector: string;
     slug: string;
-    /**
-     * Formerly both a slug and label; should prefer separately set slugs and labels
-     * @deprecated
-     */
-    name?: string;
     label: string;
     /** The number of dice to add. */
     diceNumber: number;
     /** The size of the dice to add. */
-    dieSize?: DamageDieSize;
+    dieSize: DamageDieSize | null;
     /**
      * True means the dice are added to critical without doubling; false means the dice are never added to critical
      * damage; omitted means add to normal damage and double on critical damage.
      */
-    critical?: boolean;
+    critical: boolean | null;
     /** The damage category of these dice. */
-    category?: string;
-    damageType?: string | null;
+    category: "persistent" | "precision" | "splash" | null;
+    damageType: DamageType | null;
+    /** A list of tags associated with this damage */
+    tags: string[];
     /** If true, these dice overide the base damage dice of the weapon. */
-    override?: DamageDiceOverride;
+    override: DamageDiceOverride | null;
     ignored: boolean;
     enabled: boolean;
-    custom: boolean;
-    predicate: PredicatePF2e;
-    constructor(param: Partial<Omit<DiceModifierPF2e, "predicate">> & {
-        slug?: string;
-        predicate?: RawPredicate;
-    });
-}
-declare type PartialParameters = Partial<Omit<DamageDicePF2e, "predicate">> & Pick<DamageDicePF2e, "selector" | "slug">;
-interface DamageDiceParameters extends PartialParameters {
-    predicate?: RawPredicate;
-}
-declare class DamageDicePF2e extends DiceModifierPF2e {
-    /** The selector used to determine when *has a stroke*  */
-    selector: string;
+    predicate: Predicate;
+    alterations: DamageAlteration[];
+    hideIfDisabled: boolean;
     constructor(params: DamageDiceParameters);
+    /** The `dieSize` as a number (or null) */
+    get faces(): DamageDiceFaces | null;
+    /** Test the `predicate` against a set of roll options */
+    test(options: Set<string>): void;
+    /** Get roll options for set of dice using a "dice:" prefix. */
+    getRollOptions(): string[];
+    /**
+     * Apply damage alterations: must be called externally by client code that knows this is a damage modifier.
+     * @param options.item An item (typically a weapon or spell) producing damage as part of an action
+     * @param options.test An `Array` or `Set` of roll options for use in predication testing
+     */
+    applyAlterations(options: {
+        item: ItemPF2e<ActorPF2e>;
+        test: string[] | Set<string>;
+    }): void;
     clone(): DamageDicePF2e;
+    toObject(): RawDamageDice;
 }
-export { BaseRawModifier, CheckModifier, DamageDiceOverride, DamageDicePF2e, DeferredValue, DeferredValueParams, DiceModifierPF2e, MODIFIER_TYPE, MODIFIER_TYPES, ModifierAdjustment, ModifierPF2e, ModifierType, PROFICIENCY_RANK_OPTION, ProficiencyModifier, RawModifier, StatisticModifier, applyStackingRules, createAbilityModifier, ensureProficiencyOption, };
+interface RawDamageDice extends Required<DamageDiceParameters> {
+}
+export { CheckModifier, DamageDicePF2e, MODIFIER_TYPES, ModifierPF2e, PROFICIENCY_RANK_OPTION, StatisticModifier, adjustModifiers, applyStackingRules, createAttributeModifier, createProficiencyModifier, ensureProficiencyOption, };
+export type { DamageDiceOverride, DamageDiceParameters, DeferredDamageDiceOptions, DeferredPromise, DeferredValue, DeferredValueParams, ModifierAdjustment, ModifierObjectParams, ModifierType, RawDamageDice, RawModifier, TestableDeferredValueParams, };

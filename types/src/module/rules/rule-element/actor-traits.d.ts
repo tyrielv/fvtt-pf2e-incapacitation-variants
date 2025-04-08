@@ -1,21 +1,17 @@
-import { ItemPF2e } from "@item";
-import { RuleElementPF2e, RuleElementData, RuleElementSource, RuleElementOptions } from "./";
-/**
- * @category RuleElement
- */
-export declare class ActorTraitsRuleElement extends RuleElementPF2e {
-    constructor(data: ActorTraitsSource, item: Embedded<ItemPF2e>, options?: RuleElementOptions);
-    beforePrepareData(): void;
+import type { ActorType } from "@actor/types.ts";
+import { ModelPropsFromRESchema } from "./data.ts";
+import { RuleElementPF2e, RuleElementSchema } from "./index.ts";
+import fields = foundry.data.fields;
+declare class ActorTraitsRuleElement extends RuleElementPF2e<ActorTraitsRuleSchema> {
+    #private;
+    protected static validActorTypes: ActorType[];
+    static defineSchema(): ActorTraitsRuleSchema;
+    onApplyActiveEffects(): void;
 }
-export interface ActorTraitsRuleElement extends RuleElementPF2e {
-    data: ActorTraitsData;
+type ActorTraitsRuleSchema = RuleElementSchema & {
+    add: fields.ArrayField<fields.StringField<string, string, true, false, false>>;
+    remove: fields.ArrayField<fields.StringField<string, string, true, false, false>>;
+};
+interface ActorTraitsRuleElement extends RuleElementPF2e<ActorTraitsRuleSchema>, ModelPropsFromRESchema<ActorTraitsRuleSchema> {
 }
-interface ActorTraitsSource extends RuleElementSource {
-    add?: string[];
-    remove?: string[];
-}
-interface ActorTraitsData extends RuleElementData {
-    add: string[];
-    remove: string[];
-}
-export {};
+export { ActorTraitsRuleElement };

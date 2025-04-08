@@ -1,81 +1,28 @@
-import { ActorPF2e } from "@actor";
-import { ActorSheetDataPF2e } from "@actor/sheet/data-types";
-import { MeleePF2e, SpellPF2e, WeaponPF2e } from "@item";
-import { SpellcastingEntryData } from "@item/data";
-import { SpellcastingEntryListData } from "@item/spellcasting-entry/data";
-import { ModifierPF2e } from "@actor/modifiers";
-import { TokenDocumentPF2e } from "@scene";
-import { CheckDC } from "@system/degree-of-success";
-import { CreaturePF2e } from ".";
-import { SheetOptions } from "@module/sheet/helpers";
-import { ALIGNMENTS, ALIGNMENT_TRAITS } from "./values";
-import { TraitViewData } from "@actor/data/base";
-import { FlattenedCondition } from "@system/conditions";
-import { ActorUpdateContext } from "@actor/base";
-declare type Alignment = SetElement<typeof ALIGNMENTS>;
-declare type AlignmentTrait = SetElement<typeof ALIGNMENT_TRAITS>;
-declare type AttackItem = WeaponPF2e | MeleePF2e | SpellPF2e;
-declare type ModeOfBeing = "living" | "undead" | "construct" | "object";
-interface StrikeSelf<A extends ActorPF2e = ActorPF2e, I extends AttackItem = AttackItem> {
-    actor: A;
-    token: TokenDocumentPF2e | null;
-    /** The item used for the strike */
-    item: I;
-    /** Bonuses and penalties added at the time of a strike */
-    modifiers: ModifierPF2e[];
-}
-interface AttackTarget {
-    actor: ActorPF2e;
-    token: TokenDocumentPF2e;
-    distance: number;
-}
-/** Context for the attack or damage roll of a strike */
-interface StrikeRollContext<A extends ActorPF2e, I extends AttackItem> {
-    /** Roll options */
-    options: Set<string>;
-    self: StrikeSelf<A, I>;
-    target: AttackTarget | null;
-    traits: TraitViewData[];
-}
-interface StrikeRollContextParams<T extends AttackItem> {
-    item: T;
-    /** Domains from which to draw roll options */
-    domains?: string[];
-    /** Whether the request is for display in a sheet view. If so, targets are not considered */
-    viewOnly?: boolean;
-}
-interface AttackRollContext<A extends ActorPF2e, I extends AttackItem> extends StrikeRollContext<A, I> {
-    dc: CheckDC | null;
-}
+import type { ActorPF2e, ActorUpdateOperation } from "@actor/base.ts";
+import type { CREATURE_ACTOR_TYPES } from "@actor/values.ts";
+import type { AbilityItemPF2e, MeleePF2e, WeaponPF2e } from "@item";
+import { LabeledValueAndMax } from "@module/data.ts";
+import type { TokenDocumentPF2e } from "@scene/index.ts";
+import type { LANGUAGES_BY_RARITY, SENSE_TYPES } from "./values.ts";
+/** A `CreaturePF2e` subtype string */
+type CreatureActorType = (typeof CREATURE_ACTOR_TYPES)[number];
+type CreatureTrait = keyof typeof CONFIG.PF2E.creatureTraits;
+/** One of the major creature types given in the Pathfinder bestiaries */
+type CreatureType = keyof typeof CONFIG.PF2E.creatureTypes;
+type Language = "common" | (typeof LANGUAGES_BY_RARITY.common)[number] | (typeof LANGUAGES_BY_RARITY.uncommon)[number] | (typeof LANGUAGES_BY_RARITY.rare)[number] | (typeof LANGUAGES_BY_RARITY.secret)[number];
+type Attitude = keyof typeof CONFIG.PF2E.attitude;
+type ModeOfBeing = "living" | "undead" | "construct" | "object";
+type SenseAcuity = "precise" | "imprecise" | "vague";
+type SenseType = SetElement<typeof SENSE_TYPES>;
+type SpecialVisionType = Extract<SenseType, "low-light-vision" | "darkvision" | "greater-darkvision" | "see-invisibility">;
 interface GetReachParameters {
     action?: "interact" | "attack";
-    weapon?: WeaponPF2e | MeleePF2e | null;
+    weapon?: Maybe<AbilityItemPF2e<ActorPF2e> | WeaponPF2e<ActorPF2e> | MeleePF2e<ActorPF2e>>;
 }
-interface IsFlatFootedParams {
-    /** The circumstance potentially imposing the flat-footed condition */
-    dueTo: "flanking" | "surprise" | "hidden" | "undetected";
-}
-interface CreatureUpdateContext<T extends CreaturePF2e> extends ActorUpdateContext<T> {
+interface CreatureUpdateOperation<TParent extends TokenDocumentPF2e | null> extends ActorUpdateOperation<TParent> {
     allowHPOverage?: boolean;
 }
-interface CreatureSheetData<TActor extends CreaturePF2e = CreaturePF2e> extends ActorSheetDataPF2e<TActor> {
-    languages: SheetOptions;
-    abilities: ConfigPF2e["PF2E"]["abilities"];
-    skills: ConfigPF2e["PF2E"]["skills"];
-    actorSizes: ConfigPF2e["PF2E"]["actorSizes"];
-    alignments: {
-        [K in Alignment]?: string;
-    };
-    rarity: ConfigPF2e["PF2E"]["rarityTraits"];
-    frequencies: ConfigPF2e["PF2E"]["frequencies"];
-    attitude: ConfigPF2e["PF2E"]["attitude"];
-    pfsFactions: ConfigPF2e["PF2E"]["pfsFactions"];
-    conditions: FlattenedCondition[];
-    dying: {
-        maxed: boolean;
-        remainingDying: number;
-        remainingWounded: number;
-    };
+interface ResourceData extends LabeledValueAndMax {
+    slug: string;
 }
-declare type SpellcastingSheetData = RawObject<SpellcastingEntryData> & SpellcastingEntryListData;
-export { Alignment, AlignmentTrait, AttackItem, AttackRollContext, AttackTarget, CreatureSheetData, CreatureUpdateContext, GetReachParameters, IsFlatFootedParams, ModeOfBeing, SpellcastingSheetData, StrikeRollContext, StrikeRollContextParams, StrikeSelf, };
+export type { Attitude, CreatureActorType, CreatureTrait, CreatureType, CreatureUpdateOperation, GetReachParameters, Language, ModeOfBeing, ResourceData, SenseAcuity, SenseType, SpecialVisionType, };

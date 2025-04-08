@@ -1,14 +1,33 @@
-import { CreatureTraits } from "@item/ancestry/data";
-import { BaseItemDataPF2e, BaseItemSourcePF2e, ItemSystemData } from "@item/data/base";
-import type { HeritagePF2e } from "./document";
-declare type HeritageSource = BaseItemSourcePF2e<"heritage", HeritageSystemSource>;
-declare type HeritageData = Omit<HeritageSource, "system" | "effects" | "flags"> & BaseItemDataPF2e<HeritagePF2e, "heritage", HeritageSystemData, HeritageSource>;
-interface HeritageSystemSource extends ItemSystemData {
-    ancestry: {
-        name: string;
-        uuid: ItemUUID;
-    } | null;
-    traits: CreatureTraits;
+import type { CreatureTrait } from "@actor/creature/index.ts";
+import { ItemSystemModel, ItemSystemSchema } from "@item/base/data/model.ts";
+import type { BaseItemSourcePF2e, ItemSystemSource } from "@item/base/data/system.ts";
+import { RarityField } from "@module/model.ts";
+import { SlugField } from "@system/schema-data-fields.ts";
+import type { HeritagePF2e } from "./document.ts";
+import fields = foundry.data.fields;
+type HeritageSource = BaseItemSourcePF2e<"heritage", HeritageSystemSource>;
+declare class HeritageSystemData extends ItemSystemModel<HeritagePF2e, HeritageSystemSchema> {
+    static defineSchema(): HeritageSystemSchema;
 }
-export declare type HeritageSystemData = HeritageSystemSource;
-export { HeritageData, HeritageSource, HeritageSystemSource };
+interface HeritageSystemData extends ItemSystemModel<HeritagePF2e, HeritageSystemSchema>, Omit<ModelPropsFromSchema<HeritageSystemSchema>, "description"> {
+    level?: never;
+}
+type HeritageSystemSchema = Omit<ItemSystemSchema, "traits"> & {
+    traits: fields.SchemaField<{
+        value: fields.ArrayField<fields.StringField<CreatureTrait, CreatureTrait, true, false, false>>;
+        otherTags: fields.ArrayField<SlugField<true, false, false>>;
+        rarity: RarityField;
+    }>;
+    ancestry: fields.SchemaField<HeritageAncestrySchema, SourceFromSchema<HeritageAncestrySchema>, ModelPropsFromSchema<HeritageAncestrySchema>, true, true>;
+};
+type HeritageAncestrySchema = {
+    name: fields.StringField<string, string, true, false>;
+    slug: SlugField<true, false, false>;
+    uuid: fields.DocumentUUIDField<ItemUUID, true, false>;
+};
+type HeritageSystemSource = SourceFromSchema<HeritageSystemSchema> & {
+    level?: never;
+    schema?: ItemSystemSource["schema"];
+};
+export { HeritageSystemData };
+export type { HeritageSource, HeritageSystemSource };

@@ -1,43 +1,39 @@
-import { ActivatedEffectData, BasePhysicalItemData, BasePhysicalItemSource, PhysicalItemTraits, PhysicalSystemData, PhysicalSystemSource } from "@item/physical/data";
-import { SpellSource } from "@item/spell/data";
-import type { ConsumablePF2e } from ".";
-declare type ConsumableSource = BasePhysicalItemSource<"consumable", ConsumableSystemSource>;
-declare type ConsumableData = Omit<ConsumableSource, "system" | "effects" | "flags"> & BasePhysicalItemData<ConsumablePF2e, "consumable", ConsumableSystemData, ConsumableSource>;
-declare type ConsumableType = keyof ConfigPF2e["PF2E"]["consumableTypes"];
-declare type ConsumableTrait = keyof ConfigPF2e["PF2E"]["consumableTraits"];
-declare type ConsumableTraits = PhysicalItemTraits<ConsumableTrait>;
-interface ConsumableSystemSource extends PhysicalSystemSource, ActivatedEffectData {
-    traits: ConsumableTraits;
-    consumableType: {
-        value: ConsumableType;
-    };
-    uses: {
-        value: number;
-        max: number;
-        per: any;
-        autoUse: boolean;
-        autoDestroy: boolean;
-    };
-    charges: {
-        value: number;
-        max: number;
-    };
-    consume: {
-        value: string;
-        _deprecated: boolean;
-    };
-    autoUse: {
-        value: boolean;
-    };
-    autoDestroy: {
-        value: boolean;
-        _deprecated: boolean;
-    };
-    spell: SpellSource | null;
+import type { BasePhysicalItemSource, PhysicalItemTraits, PhysicalSystemData, PhysicalSystemSource } from "@item/physical/data.ts";
+import type { SpellSource } from "@item/spell/data.ts";
+import type { DamageKind, DamageType } from "@system/damage/index.ts";
+import type { AmmoStackGroup, ConsumableCategory, ConsumableTrait, OtherConsumableTag } from "./types.ts";
+type ConsumableSource = BasePhysicalItemSource<"consumable", ConsumableSystemSource>;
+interface ConsumableTraits extends PhysicalItemTraits<ConsumableTrait> {
+    otherTags: OtherConsumableTag[];
 }
-declare type ConsumableSystemData = Omit<ConsumableSystemSource, "price"> & PhysicalSystemData & {
-    equipped: {
-        invested?: never;
+interface ConsumableSystemSource extends PhysicalSystemSource {
+    apex?: never;
+    traits: ConsumableTraits;
+    category: ConsumableCategory;
+    uses: ConsumableUses;
+    /** A formula for a healing or damage roll */
+    damage: ConsumableDamageHealing | null;
+    spell: SpellSource | null;
+    usage: {
+        value: string;
     };
+    stackGroup: AmmoStackGroup | null;
+    subitems?: never;
+}
+type ConsumableUses = {
+    value: number;
+    max: number;
+    /** Whether to delete the consumable upon use if it has no remaining uses and a quantity of 1 */
+    autoDestroy: boolean;
 };
-export { ConsumableData, ConsumableSource, ConsumableTrait, ConsumableType };
+type ConsumableDamageHealing = {
+    formula: string;
+    type: DamageType;
+    kind: DamageKind;
+};
+interface ConsumableSystemData extends Omit<ConsumableSystemSource, SourceOmission>, Omit<PhysicalSystemData, "subitems" | "traits"> {
+    apex?: never;
+    stackGroup: AmmoStackGroup | null;
+}
+type SourceOmission = "bulk" | "description" | "hp" | "identification" | "material" | "price" | "temporary" | "usage";
+export type { ConsumableDamageHealing, ConsumableSource, ConsumableSystemData, ConsumableSystemSource, ConsumableTrait, };

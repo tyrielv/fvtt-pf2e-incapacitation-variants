@@ -1,62 +1,67 @@
-import { BaseCreatureData, BaseCreatureSource, CreatureAttributes, CreatureSystemData, CreatureSystemSource, CreatureTraitsData, SkillAbbreviation } from "@actor/creature/data";
-import { CreatureSensePF2e } from "@actor/creature/sense";
-import { Rollable } from "@actor/data/base";
-import { StatisticModifier } from "@actor/modifiers";
-import { AbilityString } from "@actor/types";
-import type { FamiliarPF2e } from ".";
-declare type FamiliarSource = BaseCreatureSource<"familiar", FamiliarSystemSource>;
-interface FamiliarData extends Omit<FamiliarSource, "data" | "system" | "effects" | "flags" | "items" | "prototypeToken" | "type">, BaseCreatureData<FamiliarPF2e, "familiar", FamiliarSystemData, FamiliarSource> {
+import type { BaseCreatureSource, CreatureAttributes, CreatureDetails, CreatureLanguagesData, CreaturePerceptionData, CreatureResources, CreatureSaves, CreatureTraitsData, SkillData } from "@actor/creature/data.ts";
+import { ActorSystemModel, ActorSystemSchema } from "@actor/data/model.ts";
+import type { ModifierPF2e } from "@actor/modifiers.ts";
+import type { AttributeString } from "@actor/types.ts";
+import type { StatisticTraceData } from "@system/statistic/data.ts";
+import type { ModelPropFromDataField, SourcePropFromDataField } from "types/foundry/common/data/fields.d.ts";
+import type { FamiliarPF2e } from "./document.ts";
+import fields = foundry.data.fields;
+type FamiliarSource = BaseCreatureSource<"familiar", FamiliarSystemSource>;
+declare class FamiliarSystemData extends ActorSystemModel<FamiliarPF2e, FamiliarSystemSchema> {
+    traits: CreatureTraitsData;
+    perception: CreaturePerceptionData;
+    saves: CreatureSaves;
+    skills: Record<string, SkillData>;
+    attack: StatisticTraceData;
+    resources: CreatureResources;
+    static defineSchema(): FamiliarSystemSchema;
 }
-interface FamiliarSystemSource extends Pick<CreatureSystemSource, "schema"> {
-    details: {
-        creature: {
-            value: string;
-        };
-    };
-    attributes: {
-        hp: {
-            value: number;
-        };
-    };
-    master: {
-        id: string | null;
-        ability: AbilityString | null;
-    };
-    resources?: never;
+interface FamiliarSystemData extends foundry.abstract.TypeDataModel<FamiliarPF2e, FamiliarSystemSchema>, ModelPropsFromSchema<FamiliarSystemSchema> {
+    attributes: CreatureAttributes;
+    details: FamiliarDetails;
+    customModifiers: Record<string, ModifierPF2e[]>;
 }
-/** The raw information contained within the actor data object for familiar actors. */
-interface FamiliarSystemData extends Omit<FamiliarSystemSource, "toggles" | "traits">, CreatureSystemData {
-    details: CreatureSystemData["details"] & {
-        creature: {
-            value: string;
-        };
-    };
-    actions?: undefined;
-    attack: StatisticModifier & Rollable;
-    attributes: FamiliarAttributes;
-    skills: FamiliarSkills;
-    master: {
-        id: string | null;
-        ability: AbilityString | null;
-    };
-    traits: FamiliarTraitsData;
-}
-interface FamiliarAttributes extends CreatureAttributes {
-    ac: {
-        value: number;
-        breakdown: string;
-        check?: number;
-    };
-    perception: FamiliarPerception;
-}
-declare type FamiliarPerception = {
-    value: number;
-} & StatisticModifier & Rollable;
-declare type FamiliarSkill = StatisticModifier & Rollable & {
-    value: number;
+type FamiliarSystemSchema = ActorSystemSchema & {
+    master: fields.SchemaField<{
+        id: fields.ForeignDocumentField<string, true, true, true>;
+        ability: fields.StringField<AttributeString, AttributeString, true, true, true>;
+    }>;
+    attributes: fields.SchemaField<{
+        hp: fields.SchemaField<{
+            value: fields.NumberField<number, number, true, false, true>;
+            temp: fields.NumberField<number, number, true, false, true>;
+        }>;
+    }>;
+    details: fields.SchemaField<{
+        creature: fields.SchemaField<{
+            value: fields.StringField<string, string, true, false, true>;
+        }>;
+    }>;
 };
-declare type FamiliarSkills = Record<SkillAbbreviation, FamiliarSkill>;
-interface FamiliarTraitsData extends CreatureTraitsData {
-    senses: CreatureSensePF2e[];
+interface FamiliarSystemSource extends SourceFromSchema<FamiliarSystemSchema> {
+    attributes: FamiliarAttributesSource;
+    details: FamiliarDetailsSource;
+    customModifiers?: never;
+    perception?: never;
+    resources?: never;
+    saves?: never;
+    skills?: never;
+    traits?: never;
+    /** Legacy location of `MigrationRecord` */
+    schema?: object;
 }
-export { FamiliarData, FamiliarSource, FamiliarSystemData, FamiliarSystemSource };
+interface FamiliarAttributesSource extends SourcePropFromDataField<FamiliarSystemSchema["attributes"]> {
+    immunities?: never;
+    weaknesses?: never;
+    resistances?: never;
+}
+interface FamiliarDetailsSource extends SourcePropFromDataField<FamiliarSystemSchema["details"]> {
+    alliance?: never;
+    languages?: never;
+    level?: never;
+}
+interface FamiliarDetails extends ModelPropFromDataField<FamiliarSystemSchema["details"]>, CreatureDetails {
+    languages: CreatureLanguagesData;
+}
+export { FamiliarSystemData };
+export type { FamiliarSource, FamiliarSystemSource };

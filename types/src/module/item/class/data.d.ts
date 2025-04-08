@@ -1,27 +1,25 @@
-import { AbilityString, SaveType } from "@actor/types";
-import { ABCSystemData } from "@item/abc/data";
-import { BaseItemDataPF2e, BaseItemSourcePF2e, ItemTraits } from "@item/data/base";
-import { ZeroToFour } from "@module/data";
-import type { ClassPF2e } from ".";
-import { CLASS_TRAITS } from "./values";
-declare type ClassSource = BaseItemSourcePF2e<"class", ClassSystemSource>;
-declare type ClassData = Omit<ClassSource, "system" | "effects" | "flags"> & BaseItemDataPF2e<ClassPF2e, "class", ClassSystemData, ClassSource>;
-interface ClassSystemSource extends ABCSystemData {
-    traits: ItemTraits;
+import { AttributeString, SaveType, SkillSlug } from "@actor/types.ts";
+import { ABCSystemData, ABCSystemSource } from "@item/abc/data.ts";
+import { BaseItemSourcePF2e, RarityTraitAndOtherTags } from "@item/base/data/system.ts";
+import { ZeroToFour } from "@module/data.ts";
+type ClassSource = BaseItemSourcePF2e<"class", ClassSystemSource>;
+interface ClassSystemSource extends ABCSystemSource {
+    traits: RarityTraitAndOtherTags;
     keyAbility: {
-        value: AbilityString[];
-        selected: AbilityString | null;
+        value: AttributeString[];
+        selected: AttributeString | null;
     };
     hp: number;
     perception: ZeroToFour;
     savingThrows: Record<SaveType, ZeroToFour>;
     attacks: ClassAttackProficiencies;
     defenses: ClassDefenseProficiencies;
+    /** Starting proficiency in "spell attack rolls and DCs" */
+    spellcasting: ZeroToFour;
     trainedSkills: {
-        value: string[];
+        value: SkillSlug[];
         additional: number;
     };
-    classDC: ZeroToFour;
     ancestryFeatLevels: {
         value: number[];
     };
@@ -37,8 +35,10 @@ interface ClassSystemSource extends ABCSystemData {
     skillIncreaseLevels: {
         value: number[];
     };
+    level?: never;
 }
-declare type ClassSystemData = ClassSystemSource;
+interface ClassSystemData extends Omit<ClassSystemSource, "description">, Omit<ABCSystemData, "level" | "traits"> {
+}
 interface ClassAttackProficiencies {
     simple: ZeroToFour;
     martial: ZeroToFour;
@@ -55,5 +55,4 @@ interface ClassDefenseProficiencies {
     medium: ZeroToFour;
     heavy: ZeroToFour;
 }
-declare type ClassTrait = SetElement<typeof CLASS_TRAITS>;
-export { ClassAttackProficiencies, ClassData, ClassDefenseProficiencies, ClassSource, ClassSystemData, ClassTrait };
+export type { ClassAttackProficiencies, ClassDefenseProficiencies, ClassSource, ClassSystemData, ClassSystemSource };

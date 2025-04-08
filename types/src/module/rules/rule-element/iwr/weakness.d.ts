@@ -1,15 +1,22 @@
-import { LabeledWeakness, WeaknessType } from "@actor/data/base";
-import { IWRRuleElement, IWRRuleElementData } from "./base";
+import { Weakness } from "@actor/data/iwr.ts";
+import { WeaknessType } from "@actor/types.ts";
+import type { StrictArrayField } from "@system/schema-data-fields.ts";
+import { ModelPropsFromRESchema, ResolvableValueField, RuleValue } from "../data.ts";
+import { IWRException, IWRExceptionField, IWRRuleElement, IWRRuleSchema } from "./base.ts";
 /** @category RuleElement */
-declare class WeaknessRuleElement extends IWRRuleElement {
-    dictionary: Record<"force" | "bludgeoning" | "piercing" | "slashing" | "bleed" | "positive" | "negative" | "acid" | "cold" | "electricity" | "fire" | "sonic" | "chaotic" | "lawful" | "good" | "evil" | "mental" | "poison" | "untyped" | "adamantine" | "alignment" | "coldiron" | "darkwood" | "energy" | "ghostTouch" | "mithral" | "orichalcum" | "physical" | "precision" | "salt" | "salt-water" | "silver" | "warpglass" | "air" | "earth" | "light" | "magical" | "unarmed" | "water" | "area-damage" | "nonlethal-attacks" | "persistent-damage" | "vorpal" | "weapons" | "critical-hits" | "splash-damage" | "emotion" | "axe" | "vampire-weaknesses" | "vorpal-fear" | "vulnerable-to-sunlight", string>;
-    get property(): LabeledWeakness[];
-    getIWR(value: number): LabeledWeakness | null;
+declare class WeaknessRuleElement extends IWRRuleElement<WeaknessRuleSchema> {
+    static defineSchema(): WeaknessRuleSchema;
+    static get dictionary(): Record<WeaknessType, string>;
+    get property(): Weakness[];
+    getIWR(value: number): Weakness[];
 }
-interface WeaknessRuleElement extends IWRRuleElement {
-    data: WeaknessData;
+interface WeaknessRuleElement extends IWRRuleElement<WeaknessRuleSchema>, ModelPropsFromRESchema<WeaknessRuleSchema> {
+    value: RuleValue;
+    type: WeaknessType[];
+    exceptions: IWRException<WeaknessType>[];
 }
-interface WeaknessData extends IWRRuleElementData {
-    type: WeaknessType;
-}
+type WeaknessRuleSchema = Omit<IWRRuleSchema, "exceptions"> & {
+    value: ResolvableValueField<true, false, false>;
+    exceptions: StrictArrayField<IWRExceptionField>;
+};
 export { WeaknessRuleElement };

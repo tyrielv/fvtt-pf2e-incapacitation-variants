@@ -1,66 +1,48 @@
-import { BasePhysicalItemData, BasePhysicalItemSource, Investable, PhysicalItemTraits, PhysicalSystemData, PhysicalSystemSource } from "@item/physical/data";
-import { OneToFour, ZeroToThree } from "@module/data";
-import type { LocalizePF2e } from "@module/system/localize";
-import type { ArmorPF2e } from ".";
-import { OtherArmorTag } from "./types";
-declare type ArmorSource = BasePhysicalItemSource<"armor", ArmorSystemSource>;
-declare type ArmorData = Omit<ArmorSource, "system" | "effects" | "flags"> & BasePhysicalItemData<ArmorPF2e, "armor", ArmorSystemData, ArmorSource>;
+import { PhysicalItemSource } from "@item/base/data/index.ts";
+import { BasePhysicalItemSource, Investable, ItemMaterialSource, PhysicalItemTraits, PhysicalSystemData, PhysicalSystemSource } from "@item/physical/data.ts";
+import { WornUsage } from "@item/physical/usage.ts";
+import { ZeroToFour } from "@module/data.ts";
+import { ArmorCategory, ArmorGroup, ArmorPropertyRuneType, ArmorTrait, BaseArmorType, OtherArmorTag } from "./index.ts";
+type ArmorSource = BasePhysicalItemSource<"armor", ArmorSystemSource>;
 interface ArmorSystemSource extends Investable<PhysicalSystemSource> {
     traits: ArmorTraits;
-    armor: {
-        value: number;
-    };
     category: ArmorCategory;
     group: ArmorGroup | null;
     baseItem: BaseArmorType | null;
-    strength: {
-        value: number;
-    };
-    dex: {
-        value: number;
-    };
-    check: {
-        value: number;
-    };
-    speed: {
-        value: number;
-    };
-    potencyRune: {
-        value: OneToFour | null;
-    };
-    resiliencyRune: {
-        value: ResilientRuneType | null;
-    };
-    propertyRune1: {
-        value: string;
-    };
-    propertyRune2: {
-        value: string;
-    };
-    propertyRune3: {
-        value: string;
-    };
-    propertyRune4: {
-        value: string;
-    };
+    acBonus: number;
+    strength: number | null;
+    dexCap: number;
+    checkPenalty: number;
+    speedPenalty: number;
+    runes: ArmorRuneSource;
+    /** Details of specific magic armor, storing the material and rune state when toggled on */
+    specific: SpecificArmorData | null;
+    /** Doubly-embedded adjustments, attachments, talismans etc. */
+    subitems: PhysicalItemSource[];
+    /** Usage for armor isn't stored. */
+    readonly usage?: never;
 }
-interface ArmorSystemData extends Omit<ArmorSystemSource, "price" | "temporary" | "usage">, Investable<PhysicalSystemData> {
-    baseItem: BaseArmorType;
-    traits: ArmorTraits;
-    runes: {
-        potency: number;
-        resilient: ZeroToThree;
-        property: string[];
-    };
+type ArmorRuneSource = {
+    potency: ZeroToFour;
+    resilient: ZeroToFour;
+    property: ArmorPropertyRuneType[];
+};
+/** A weapon can either be unspecific or specific along with baseline material and runes */
+type SpecificArmorData = {
+    material: ItemMaterialSource;
+    runes: ArmorRuneSource;
+};
+interface ArmorSystemData extends Omit<ArmorSystemSource, SourceOmission>, Omit<Investable<PhysicalSystemData>, "baseItem" | "subitems" | "traits"> {
+    runes: ArmorRuneData;
+    /** Armor is always worn in the "armor" slot. */
+    usage: WornUsage;
+    stackGroup: null;
 }
-declare type ArmorTrait = keyof ConfigPF2e["PF2E"]["armorTraits"];
-interface ArmorTraitsSource extends PhysicalItemTraits<ArmorTrait> {
-    otherTags?: OtherArmorTag[];
+type SourceOmission = "apex" | "bulk" | "description" | "hp" | "identification" | "material" | "price" | "temporary" | "usage";
+interface ArmorTraits extends PhysicalItemTraits<ArmorTrait> {
+    otherTags: OtherArmorTag[];
 }
-declare type ArmorTraits = Required<ArmorTraitsSource>;
-export declare type ArmorCategory = keyof ConfigPF2e["PF2E"]["armorTypes"];
-export declare type ArmorGroup = keyof ConfigPF2e["PF2E"]["armorGroups"];
-export declare type BaseArmorType = keyof typeof LocalizePF2e.translations.PF2E.Item.Armor.Base;
-export declare type ResilientRuneType = "" | "resilient" | "greaterResilient" | "majorResilient";
-declare const ARMOR_CATEGORIES: readonly ["unarmored", "light", "medium", "heavy"];
-export { ArmorData, ArmorSource, ArmorSystemData, ArmorSystemSource, ArmorTrait, ARMOR_CATEGORIES };
+interface ArmorRuneData extends ArmorRuneSource {
+    effects: ArmorPropertyRuneType[];
+}
+export type { ArmorSource, ArmorSystemData, ArmorSystemSource, SpecificArmorData };

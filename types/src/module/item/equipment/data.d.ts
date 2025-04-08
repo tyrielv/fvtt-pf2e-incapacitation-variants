@@ -1,16 +1,19 @@
-import { BasePhysicalItemData, BasePhysicalItemSource, Investable, PhysicalItemTraits, PhysicalSystemData, PhysicalSystemSource } from "@item/physical/data";
-import type { EquipmentPF2e } from ".";
-import { EquipmentTrait, OtherEquipmentTag } from "./types";
-declare type EquipmentSource = BasePhysicalItemSource<"equipment", EquipmentSystemSource>;
-declare type EquipmentData = Omit<EquipmentSource, "system" | "effects" | "flags"> & BasePhysicalItemData<EquipmentPF2e, "equipment", EquipmentSystemData, EquipmentSource>;
+import type { PhysicalItemSource } from "@item/base/data/index.ts";
+import type { BasePhysicalItemSource, Investable, PhysicalItemTraits, PhysicalSystemData, PhysicalSystemSource } from "@item/physical/data.ts";
+import type { EquipmentTrait } from "./types.ts";
+type EquipmentSource = BasePhysicalItemSource<"equipment", EquipmentSystemSource>;
 interface EquipmentSystemSource extends Investable<PhysicalSystemSource> {
-    traits: EquipmentTraitsSource;
-}
-interface EquipmentSystemData extends Omit<EquipmentSystemSource, "price" | "temporary" | "usage">, Investable<PhysicalSystemData> {
     traits: EquipmentTraits;
+    usage: {
+        value: string;
+    };
+    /** Doubly-embedded adjustments, attachments, talismans etc. */
+    subitems: PhysicalItemSource[];
 }
-interface EquipmentTraitsSource extends PhysicalItemTraits<EquipmentTrait> {
-    otherTags?: OtherEquipmentTag[];
+interface EquipmentTraits extends PhysicalItemTraits<EquipmentTrait> {
 }
-declare type EquipmentTraits = Required<EquipmentTraitsSource>;
-export { EquipmentData, EquipmentSource, EquipmentSystemData, EquipmentSystemSource, EquipmentTrait };
+interface EquipmentSystemData extends Omit<EquipmentSystemSource, SourceOmission>, Omit<Investable<PhysicalSystemData>, "subitems" | "traits"> {
+    stackGroup: null;
+}
+type SourceOmission = "apex" | "bulk" | "description" | "hp" | "identification" | "material" | "price" | "temporary" | "usage";
+export type { EquipmentSource, EquipmentSystemData, EquipmentSystemSource, EquipmentTrait };

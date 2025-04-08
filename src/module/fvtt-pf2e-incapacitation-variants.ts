@@ -1,6 +1,6 @@
 import { CheckPF2e, CheckRollCallback } from "@system/check/check";
 import { CheckModifier } from "@actor/modifiers";
-import { CheckRollContext } from "@system/check/types";
+import { CheckCheckContext } from "@system/check/types";
 export const MODULENAME = "fvtt-pf2e-incapacitation-variants";
 import * as Settings from "./settings";
 
@@ -40,7 +40,7 @@ function wrap() {
         const original = game.pf2e.Check.roll.bind(game.pf2e.Check);
         game.pf2e.Check.roll = (
             check: CheckModifier,
-            context?: CheckRollContext,
+            context?: CheckCheckContext,
             event?: JQuery.TriggeredEvent | null,
             callback?: CheckRollCallback
         ) => {
@@ -52,7 +52,7 @@ function wrap() {
 function updateIncapacitation(
     original: typeof CheckPF2e.roll,
     check: CheckModifier,
-    context?: CheckRollContext,
+    context?: CheckCheckContext,
     event?: JQuery.TriggeredEvent | null,
     callback?: CheckRollCallback
 ) {
@@ -66,7 +66,7 @@ function updateIncapacitation(
     return original(check, context, event, callback);
 }
 
-function determineApplies(context: CheckRollContext) {
+function determineApplies(context: CheckCheckContext) {
     const hpThreshold = Settings.getHpThreshold();
     const hitPoints = context.target?.actor?.hitPoints ?? context.actor?.hitPoints;
     if (hitPoints) {
@@ -89,18 +89,18 @@ function determineApplies(context: CheckRollContext) {
     return false;
 }
 
-function applyBasedOnLevelDifference(context: CheckRollContext) {
+function applyBasedOnLevelDifference(context: CheckCheckContext) {
     const levelDifference = Settings.getRequiredLevelDifferenceSetting();
     return incapacitationAppliesBasedOnLevelDifference(context, levelDifference);
 }
 
-function applyBasedOnTrait(context: CheckRollContext) {
+function applyBasedOnTrait(context: CheckCheckContext) {
     const traitName = Settings.getTraitNameSetting().toLowerCase();
     const actor = isSavingThrow(context) ? context.actor : context.target?.actor;
     return actor?.traits.has(traitName) ?? false;
 }
 
-function rewriteIncapacitation(check: CheckModifier, context: CheckRollContext) {
+function rewriteIncapacitation(check: CheckModifier, context: CheckCheckContext) {
     removeSystemIncapacitation(context);
 
     const applies = determineApplies(context);
@@ -134,7 +134,7 @@ function rewriteIncapacitation(check: CheckModifier, context: CheckRollContext) 
     }
 }
 
-function scaleWithHP(context: CheckRollContext) {
+function scaleWithHP(context: CheckCheckContext) {
     const hitPoints = context.target?.actor?.hitPoints ?? context.actor?.hitPoints;
     if (!hitPoints) {
         return;
@@ -151,7 +151,7 @@ function scaleWithHP(context: CheckRollContext) {
 
 const adjustmentLabel = "IncapacitationVariant";
 
-function improveWorstDOS(context: CheckRollContext) {
+function improveWorstDOS(context: CheckCheckContext) {
     const dosAdjustments = context.dosAdjustments ?? [];
     if (isSavingThrow(context)) {
         dosAdjustments.push({
@@ -175,7 +175,7 @@ function improveWorstDOS(context: CheckRollContext) {
     context.dosAdjustments = dosAdjustments;
 }
 
-function improveWorst2DOS(context: CheckRollContext) {
+function improveWorst2DOS(context: CheckCheckContext) {
     const dosAdjustments = context.dosAdjustments ?? [];
     if (isSavingThrow(context)) {
         dosAdjustments.push({
@@ -207,7 +207,7 @@ function improveWorst2DOS(context: CheckRollContext) {
     context.dosAdjustments = dosAdjustments;
 }
 
-function giveBonus(check: CheckModifier, context: CheckRollContext) {
+function giveBonus(check: CheckModifier, context: CheckCheckContext) {
     let bonus = Settings.getBonusAmountSetting();
     if (!isSavingThrow(context)) {
         bonus = -bonus;
@@ -221,11 +221,11 @@ function giveBonus(check: CheckModifier, context: CheckRollContext) {
     check.push(modifier);
 }
 
-function rollTwice(context: CheckRollContext) {
+function rollTwice(context: CheckCheckContext) {
     context.rollTwice = isSavingThrow(context) ? "keep-higher" : "keep-lower";
 }
 
-function improveAllDOS(context: CheckRollContext) {
+function improveAllDOS(context: CheckCheckContext) {
     const dosAdjustments = context.dosAdjustments ?? [];
     if (isSavingThrow(context)) {
         dosAdjustments.push({
@@ -249,7 +249,7 @@ function improveAllDOS(context: CheckRollContext) {
     context.dosAdjustments = dosAdjustments;
 }
 
-function isSavingThrow(context: CheckRollContext) {
+function isSavingThrow(context: CheckCheckContext) {
     const type = context.type;
     if (type === "saving-throw") {
         return true;
@@ -261,7 +261,7 @@ function isSavingThrow(context: CheckRollContext) {
     return false;
 }
 
-function hasIncapacitationTrait(context: CheckRollContext) {
+function hasIncapacitationTrait(context: CheckCheckContext) {
     const options = getOptionsSet(context.options);
     return !!options && (options.has("incapacitation") || options.has("item:trait:incapacitation")) && context.dc;
 }
@@ -281,7 +281,7 @@ function getOptionsSet(rawOptions: any): Set<string> {
     return new Set<string>();
 }
 
-function incapacitationAppliesBasedOnLevelDifference(context: CheckRollContext, requiredLevelDifference: number) {
+function incapacitationAppliesBasedOnLevelDifference(context: CheckCheckContext, requiredLevelDifference: number) {
     const effectLevel = getEffectLevel(context);
     const targetLevel = getTargetLevel(context);
     if (effectLevel === undefined || targetLevel === undefined) {
@@ -292,14 +292,14 @@ function incapacitationAppliesBasedOnLevelDifference(context: CheckRollContext, 
     return levelDifference >= requiredLevelDifference;
 }
 
-function getTargetLevel(context: CheckRollContext) {
+function getTargetLevel(context: CheckCheckContext) {
     const target = context.target;
     const actor = context.actor;
-    const level = isSavingThrow(context) && actor ? actor.level : target?.actor.level;
+    const level = isSavingThrow(context) && actor ? actor.level : target?.actor?.level;
     return level;
 }
 
-function removeSystemIncapacitation(context: CheckRollContext) {
+function removeSystemIncapacitation(context: CheckCheckContext) {
     const index =
         context.dosAdjustments?.findIndex((x) => x?.adjustments?.all?.label === "PF2E.TraitIncapacitation") ?? -1;
     if (index >= 0) {
@@ -308,7 +308,7 @@ function removeSystemIncapacitation(context: CheckRollContext) {
     }
 }
 
-function getEffectLevel(context: CheckRollContext) {
+function getEffectLevel(context: CheckCheckContext) {
     const item = context.item;
     const actor = context.actor;
     const options = getOptionsSet(context.options);

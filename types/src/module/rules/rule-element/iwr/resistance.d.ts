@@ -1,15 +1,23 @@
-import { LabeledResistance, ResistanceType } from "@actor/data/base";
-import { IWRRuleElement, IWRRuleElementData } from "./base";
+import { Resistance } from "@actor/data/iwr.ts";
+import { ResistanceType } from "@actor/types.ts";
+import type { StrictArrayField } from "@system/schema-data-fields.ts";
+import { ModelPropsFromRESchema, ResolvableValueField, RuleValue } from "../data.ts";
+import { IWRException, IWRExceptionField, IWRRuleElement, IWRRuleSchema } from "./base.ts";
 /** @category RuleElement */
-declare class ResistanceRuleElement extends IWRRuleElement {
-    dictionary: Record<"all" | "force" | "bludgeoning" | "piercing" | "slashing" | "bleed" | "positive" | "negative" | "acid" | "cold" | "electricity" | "fire" | "sonic" | "chaotic" | "lawful" | "good" | "evil" | "mental" | "poison" | "untyped" | "adamantine" | "alignment" | "coldiron" | "darkwood" | "energy" | "ghostTouch" | "mithral" | "orichalcum" | "physical" | "precision" | "salt" | "salt-water" | "silver" | "warpglass" | "air" | "earth" | "light" | "magical" | "unarmed" | "water" | "area-damage" | "nonlethal-attacks" | "persistent-damage" | "vorpal" | "weapons" | "critical-hits" | "protean anatomy", string>;
-    get property(): LabeledResistance[];
-    getIWR(value: number): LabeledResistance | null;
+declare class ResistanceRuleElement extends IWRRuleElement<ResistanceRuleSchema> {
+    static defineSchema(): ResistanceRuleSchema;
+    static get dictionary(): Record<ResistanceType, string>;
+    get property(): Resistance[];
+    getIWR(value: number): Resistance[];
 }
-interface ResistanceRuleElement extends IWRRuleElement {
-    data: ResistanceData;
+interface ResistanceRuleElement extends IWRRuleElement<ResistanceRuleSchema>, ModelPropsFromRESchema<ResistanceRuleSchema> {
+    value: RuleValue;
+    type: ResistanceType[];
+    exceptions: IWRException<ResistanceType>[];
 }
-interface ResistanceData extends IWRRuleElementData {
-    type: ResistanceType;
-}
+type ResistanceRuleSchema = Omit<IWRRuleSchema, "exceptions"> & {
+    value: ResolvableValueField<true, false, false>;
+    exceptions: StrictArrayField<IWRExceptionField<ResistanceType>>;
+    doubleVs: StrictArrayField<IWRExceptionField<ResistanceType>>;
+};
 export { ResistanceRuleElement };

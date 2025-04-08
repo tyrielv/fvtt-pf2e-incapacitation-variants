@@ -1,4 +1,2 @@
-export * from "./calculation";
-export * from "./damage";
-export * from "./roll-dialog";
-export * from "./weapon";
+export * from "./damage.ts";
+export * from "./types.ts";

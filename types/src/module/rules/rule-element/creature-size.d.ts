@@ -1,15 +1,18 @@
-import { CreaturePF2e } from "@actor";
-import { ActorType } from "@actor/data";
-import { ActorSizePF2e } from "@actor/data/size";
-import { ItemPF2e } from "@item";
-import { RuleElementPF2e, RuleElementData, RuleElementSource, RuleElementOptions } from "./";
+import type { ActorType, CreaturePF2e } from "@actor";
+import { Size } from "@module/data.ts";
+import { RecordField } from "@system/schema-data-fields.ts";
+import { RuleElementOptions, RuleElementPF2e } from "./base.ts";
+import { ModelPropsFromRESchema, ResolvableValueField, RuleElementSchema, RuleElementSource } from "./data.ts";
+import fields = foundry.data.fields;
 /**
  * @category RuleElement
- * Increase the creature's size
+ * Change a creature's size
  */
-export declare class CreatureSizeRuleElement extends RuleElementPF2e {
+declare class CreatureSizeRuleElement extends RuleElementPF2e<CreatureSizeRuleSchema> {
+    #private;
     protected static validActorTypes: ActorType[];
-    constructor(data: CreatureSizeConstructionData, item: Embedded<ItemPF2e>, options?: RuleElementOptions);
+    constructor(data: RuleElementSource, options: RuleElementOptions);
+    static defineSchema(): CreatureSizeRuleSchema;
     private static wordToAbbreviation;
     private static incrementMap;
     private static decrementMap;
@@ -17,16 +20,14 @@ export declare class CreatureSizeRuleElement extends RuleElementPF2e {
     private decrementSize;
     beforePrepareData(): void;
 }
-export interface CreatureSizeRuleElement extends RuleElementPF2e {
+interface CreatureSizeRuleElement extends RuleElementPF2e<CreatureSizeRuleSchema>, ModelPropsFromRESchema<CreatureSizeRuleSchema> {
     get actor(): CreaturePF2e;
-    data: CreatureSizeRuleElementData;
 }
-interface CreatureSizeRuleElementData extends RuleElementData {
-    resizeEquipment: boolean;
-    minimumSize?: ActorSizePF2e;
-    maximumSize?: ActorSizePF2e;
-}
-interface CreatureSizeConstructionData extends RuleElementSource {
-    resizeEquipment?: boolean;
-}
-export {};
+type CreatureSizeRuleSchema = RuleElementSchema & {
+    value: ResolvableValueField<true, false, true>;
+    reach: RecordField<fields.StringField<"add" | "upgrade" | "override", "add" | "upgrade" | "override", true, false, false>, ResolvableValueField<true, false, false>, false, false, false>;
+    resizeEquipment: fields.BooleanField<boolean, boolean, false, false, false>;
+    minimumSize: fields.StringField<Size, Size, false, false, false>;
+    maximumSize: fields.StringField<Size, Size, false, false, false>;
+};
+export { CreatureSizeRuleElement };

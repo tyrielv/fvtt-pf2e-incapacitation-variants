@@ -1,6 +1,3 @@
-import { CheckRoll } from "./roll";
-import { StrikeAttackRoll } from "./strike/attack-roll";
-export declare const Check: {
-    Roll: typeof CheckRoll;
-    StrikeAttackRoll: typeof StrikeAttackRoll;
-};
+export * from "./check.ts";
+export { CheckRoll, StrikeAttackRoll } from "./roll.ts";
+export * from "./types.ts";

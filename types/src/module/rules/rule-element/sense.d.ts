@@ -1,31 +1,23 @@
-import { RuleElementPF2e, RuleElementData, RuleElementSource } from "./";
-import { CharacterPF2e, FamiliarPF2e } from "@actor";
-import { ActorType } from "@actor/data";
-import { ItemPF2e } from "@item";
-import { SenseAcuity, SenseType } from "@actor/creature/sense";
-import { RuleElementOptions } from "./base";
+import type { ActorType, CharacterPF2e, FamiliarPF2e } from "@actor";
+import type { SenseAcuity, SenseType } from "@actor/creature/types.ts";
+import { RuleElementPF2e } from "./base.ts";
+import { ModelPropsFromRESchema, ResolvableValueField, RuleElementSchema } from "./data.ts";
+import fields = foundry.data.fields;
 /**
  * @category RuleElement
  */
-export declare class SenseRuleElement extends RuleElementPF2e {
+declare class SenseRuleElement extends RuleElementPF2e<SenseRuleSchema> {
     protected static validActorTypes: ActorType[];
-    constructor(data: SenseRuleElementSource, item: Embedded<ItemPF2e>, options?: RuleElementOptions);
+    static defineSchema(): SenseRuleSchema;
     beforePrepareData(): void;
 }
-export interface SenseRuleElement {
+interface SenseRuleElement extends RuleElementPF2e<SenseRuleSchema>, ModelPropsFromRESchema<SenseRuleSchema> {
     get actor(): CharacterPF2e | FamiliarPF2e;
-    data: SenseRuleElementData;
 }
-interface SenseRuleElementData extends RuleElementData {
-    label: string;
-    force: boolean;
-    acuity: SenseAcuity;
-    range: string | number;
-    selector: SenseType;
-}
-interface SenseRuleElementSource extends RuleElementSource {
-    acuity?: string;
-    range?: string | number | null;
-    force?: boolean;
-}
-export {};
+type SenseRuleSchema = RuleElementSchema & {
+    selector: fields.StringField<SenseType, SenseType, true, false, false>;
+    force: fields.BooleanField<boolean, boolean, false, false, true>;
+    acuity: fields.StringField<SenseAcuity, SenseAcuity, false, false, true>;
+    range: ResolvableValueField<false, false, false>;
+};
+export { SenseRuleElement };

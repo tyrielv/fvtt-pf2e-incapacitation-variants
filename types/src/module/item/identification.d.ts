@@ -1,21 +1,15 @@
-import { DCOptions } from "../dc";
-import { PhysicalItemPF2e } from "./physical";
-export interface IdentifyMagicDCs {
-    arc: number;
-    nat: number;
-    rel: number;
-    occ: number;
-}
-export interface IdentifyAlchemyDCs {
-    cra: number;
-}
-export interface GenericIdentifyDCs {
-    dc: number;
-}
-export declare function isMagical(item: PhysicalItemPF2e): boolean;
+import { SkillSlug } from "@actor/types.ts";
+import { DCOptions } from "../dc.ts";
+import type { PhysicalItemPF2e } from "./physical/index.ts";
+type MagicSkill = Extract<SkillSlug, "arcana" | "nature" | "religion" | "occultism">;
+type IdentifyMagicDCs = Record<MagicSkill, number>;
+type IdentifyAlchemyDCs = {
+    crafting: number;
+};
 interface IdentifyItemOptions extends DCOptions {
     notMatchingTraditionModifier: number;
 }
-export declare function identifyItem(item: PhysicalItemPF2e, { proficiencyWithoutLevel, notMatchingTraditionModifier }: IdentifyItemOptions): GenericIdentifyDCs | IdentifyMagicDCs | IdentifyAlchemyDCs;
-export declare function getUnidentifiedPlaceholderImage(item: PhysicalItemPF2e): string;
-export {};
+declare function getItemIdentificationDCs(item: PhysicalItemPF2e, { pwol, notMatchingTraditionModifier }: IdentifyItemOptions): IdentifyMagicDCs | IdentifyAlchemyDCs;
+declare function getUnidentifiedPlaceholderImage(item: PhysicalItemPF2e): string;
+export { getItemIdentificationDCs, getUnidentifiedPlaceholderImage };
+export type { IdentifyAlchemyDCs, IdentifyMagicDCs };

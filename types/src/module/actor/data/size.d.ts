@@ -1,4 +1,4 @@
-import { Size } from "@module/data";
+import { Size } from "@module/data.ts";
 export declare class ActorSizePF2e {
     /** The size category of this category */
     value: Size;
@@ -14,18 +14,20 @@ export declare class ActorSizePF2e {
      * @param value A size category
      * @param [length] A length of a Pathfinder "space"
      * @param [width]  A width of a Pathfinder "space"
+     * @param [smallIsMedium] Treat small as medium
      */
-    constructor({ value, length, width }: {
-        value: Size;
+    constructor(params: {
+        value?: Size;
         length?: number;
         width?: number;
+        smallIsMedium?: boolean;
     });
     /**
      * Test for equality between this and another size, falling back to comparing areas in case of a category tie
      * @param size The size to which this size is being compared
      * @param [smallIsMedium] Treat small as medium for both sizes
      */
-    equals(size: ActorSizePF2e, { smallIsMedium }?: {
+    equals(size: ActorSizePF2e | Size, { smallIsMedium }?: {
         smallIsMedium?: boolean | undefined;
     }): boolean;
     /**

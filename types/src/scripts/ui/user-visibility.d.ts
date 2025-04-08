@@ -1,14 +1,13 @@
-/// <reference types="jquery" />
-/// <reference types="tooltipster" />
-import { ActorPF2e } from "@actor";
-import { ChatMessagePF2e } from "@module/chat-message";
-declare const UserVisibilityPF2e: {
+import { ChatMessagePF2e } from "@module/chat-message/index.ts";
+declare class UserVisibilityPF2e {
     /** Edits HTML live based on permission settings. Used to hide certain blocks and values */
-    process: ($html: JQuery, options?: ProcessOptions) => void;
-};
-declare type UserVisibility = "all" | "owner" | "gm" | "none";
-interface ProcessOptions {
-    message?: ChatMessagePF2e;
-    actor?: ActorPF2e | null;
+    static process(html: HTMLElement, options?: ProcessOptions): void;
+    static processMessageSender(message: ChatMessagePF2e, html: HTMLElement): void;
 }
-export { UserVisibilityPF2e, UserVisibility };
+declare const USER_VISIBILITIES: Set<"none" | "all" | "owner" | "gm">;
+type UserVisibility = SetElement<typeof USER_VISIBILITIES>;
+interface ProcessOptions {
+    document?: ClientDocument | null;
+    message?: ChatMessagePF2e | null;
+}
+export { USER_VISIBILITIES, UserVisibilityPF2e, type UserVisibility };
