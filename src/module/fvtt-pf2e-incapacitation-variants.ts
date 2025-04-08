@@ -325,8 +325,8 @@ function getEffectLevel(context: CheckCheckContext) {
 
     let effectLevel: number | undefined;
     if (item?.isOfType("spell")) {
-        const casterLevel = originLevel ?? actor?.level ?? 2 * item.level;
-        const spellLevel = 2 * item.level;
+        const casterLevel = originLevel ?? actor?.level ?? 2 * item.rank;
+        const spellLevel = 2 * item.rank;
         switch (setting) {
             case "CasterLevel":
                 effectLevel = casterLevel;
@@ -336,6 +336,9 @@ function getEffectLevel(context: CheckCheckContext) {
                 break;
             case "BetterOfSlotLevelOrCasterLevel":
                 effectLevel = Math.max(casterLevel, spellLevel);
+                break;
+            case "SlotRankPlusHalfCasterLevel":
+                effectLevel = item.rank + Math.floor(casterLevel / 2);
                 break;
         }
     } else if (item?.isOfType("physical")) {

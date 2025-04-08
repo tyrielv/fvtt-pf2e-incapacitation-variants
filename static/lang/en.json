@@ -21,7 +21,8 @@
         "hint": "Change how effect level is calculated for spells.",
         "SlotLevel": "2 x Spell Slot Rank",
         "CasterLevel": "Caster Level",
-        "BetterOfSlotLevelOrCasterLevel": "Better of Caster Level or 2 x Spell Slot Rank"
+        "BetterOfSlotLevelOrCasterLevel": "Better of Caster Level or 2 x Spell Slot Rank",
+        "SlotRankPlusHalfCasterLevel": "Spell Slot Rank plus half of Caster Level (rounded down)"
       },
       "IncapacitationEffect": {
         "name": "Incapacitation effect",
@@ -30,7 +31,7 @@
         "ImproveWorstDOS": "Improve critical failures only",
         "ImproveWorst2DOS": "Improve failures",
         "RollTwice": "Roll twice and keep higher",
-        "GiveBonus": "Add a bonus",
+        "GiveBonus": "Add a flat, untyped bonus",
         "ScaleDOSImprovementsWithHP": "Improve fewer degrees of success as HP decreases"
       },
       "BonusAmount": {

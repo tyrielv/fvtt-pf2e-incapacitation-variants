@@ -9,9 +9,18 @@ export async function runTests() {
     if (level1Message == undefined) {
         ui.notifications.error("Cast charm from level 1 actor with rank 1 spell");
     }
-    const level11Message = game.messages.find(x => x.actor?.level === 11 && x.item?.name === "Charm")!;
-    if (level1Message == undefined) {
+
+    function getRank(x:any) {
+        const y = x as { rank?: number};
+        return y.rank ?? 0;
+    }
+    const level11rank1Message = game.messages.find(x => x.actor?.level === 11 && x.item?.name === "Charm" && getRank(x.item) === 1)!;
+    if (level11rank1Message == undefined) {
         ui.notifications.error("Cast charm from level 11 actor with rank 1 spell");
+    }
+    const level11rank3Message = game.messages.find(x => x.actor?.level === 11 && x.item?.name === "Charm" && getRank(x.item) === 3)!;
+    if (level11rank3Message == undefined) {
+        ui.notifications.error("Cast charm from level 11 actor with rank 3 spell");
     }
 
     await cleanUpRolls();
@@ -37,7 +46,7 @@ export async function runTests() {
 
     await setConfigToDefaults();
     await game.settings.set(MODULENAME, Settings.Keys.SpellEffectLevel, "CasterLevel");
-    var result = await runTestCase(5, level11Message, 'Caster level 11');
+    var result = await runTestCase(5, level11rank1Message, 'Caster level 11');
     if (!result) { return;}
 
     await setConfigToDefaults();
@@ -47,7 +56,7 @@ export async function runTests() {
 
     await setConfigToDefaults();
     await game.settings.set(MODULENAME, Settings.Keys.SpellEffectLevel, "BetterOfSlotLevelOrCasterLevel")
-    var result = await runTestCase(7, level11Message, 'Caster level 11 better of level/2xrank');
+    var result = await runTestCase(7, level11rank1Message, 'Caster level 11 better of level/2xrank');
     if (!result) { return;}
 
     await setConfigToDefaults();
@@ -81,7 +90,12 @@ export async function runTests() {
     var result = await runTestCaseRollTwiceKeepHigher(13, level1Message);
     if (!result) { return;}
 
+    await setConfigToDefaults();
+    await game.settings.set(MODULENAME, Settings.Keys.SpellEffectLevel, "SlotRankPlusHalfCasterLevel");
+    var result = await runTestCase(14, level11rank3Message, 'Half level plus rank');
+
     ui.notifications.info(`All passed`);
+    await setConfigToDefaults();
 }
 
 async function runTestCaseRollTwiceKeepHigher(groupNumber: number, message: ChatMessagePF2e)

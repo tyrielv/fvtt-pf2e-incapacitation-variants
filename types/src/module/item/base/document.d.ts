@@ -18,6 +18,7 @@ declare class ItemPF2e<TParent extends ActorPF2e | null = ActorPF2e | null> exte
     specialOptions: string[];
     /** The item that granted this item, if any */
     grantedBy: ItemPF2e<ActorPF2e> | null;
+    rank: number;
     static getDefaultArtwork(itemData: foundry.documents.ItemSource): {
         img: ImageFilePath;
     };

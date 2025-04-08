@@ -75,6 +75,7 @@ export function registerSettings() {
             SlotLevel: game.i18n.localize(`${MODULENAME}.SETTINGS.${Keys.SpellEffectLevel}.SlotLevel`),
             CasterLevel: game.i18n.localize(`${MODULENAME}.SETTINGS.${Keys.SpellEffectLevel}.CasterLevel`),
             BetterOfSlotLevelOrCasterLevel: game.i18n.localize(`${MODULENAME}.SETTINGS.${Keys.SpellEffectLevel}.BetterOfSlotLevelOrCasterLevel`),
+            SlotRankPlusHalfCasterLevel: game.i18n.localize(`${MODULENAME}.SETTINGS.${Keys.SpellEffectLevel}.SlotRankPlusHalfCasterLevel`)
         },
     });
 
@@ -135,7 +136,11 @@ export function getTraitNameSetting() {
     return game.settings.get(MODULENAME, Keys.TraitName) as string;
 }
 
-export type SpellEffectLevel = "SlotLevel" | "CasterLevel" | "BetterOfSlotLevelOrCasterLevel";
+export type SpellEffectLevel =
+    | "SlotLevel"
+    | "CasterLevel"
+    | "BetterOfSlotLevelOrCasterLevel"
+    | "SlotRankPlusHalfCasterLevel";
 
 export type IncapacitationEffect =
     | "ImproveAllDOS"
