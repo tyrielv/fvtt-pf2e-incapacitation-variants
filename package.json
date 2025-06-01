@@ -44,7 +44,7 @@
     "eslint-config-prettier": "^10.1.5",
     "eslint-import-resolver-typescript": "^4.3.4",
     "eslint-plugin-import": "^2.31.0",
-    "eslint-plugin-prettier": "^5.2.6",
+    "eslint-plugin-prettier": "^5.4.1",
     "fork-ts-checker-webpack-plugin": "^9.1.0",
     "fs-extra": "^11.3.0",
     "lint-staged": "^15.5.0",
