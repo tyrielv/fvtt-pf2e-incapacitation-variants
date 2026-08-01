@@ -54,7 +54,7 @@
     "thread-loader": "^4.0.4",
     "ts-loader": "^9.6.2",
     "ts-node": "^10.9.2",
-    "typedoc": "^0.28.19",
+    "typedoc": "^0.28.20",
     "webpack-cli": "^7.1.0",
     "webpack-dev-server": "^5.2.4",
     "webpack-import-glob-loader": "^1.6.3"
