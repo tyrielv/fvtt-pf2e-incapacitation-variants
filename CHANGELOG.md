@@ -1,3 +1,10 @@
+## [1.4.1](https://github.com/tyrielv/fvtt-pf2e-incapacitation-variants/compare/v1.4.0...v1.4.1) (2026-09-15)
+
+
+### Bug Fixes
+
+* SF2E support ([1cab38b](https://github.com/tyrielv/fvtt-pf2e-incapacitation-variants/commit/1cab38bd3e4f331fcd468b0392004f2a92d24ca6))
+
 # [1.4.0](https://github.com/tyrielv/fvtt-pf2e-incapacitation-variants/compare/v1.3.1...v1.4.0) (2025-04-08)
 
 
