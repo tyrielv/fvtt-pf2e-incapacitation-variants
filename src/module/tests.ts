@@ -274,6 +274,10 @@ async function waitForMessagesToBeDeleted(toCheck: ChatMessagePF2e[]) {
             if (message !== null) {
                 allDeleted = false;
             }
+            const messageDoc = game.messages.get(m.id);
+            if (messageDoc !== undefined) {
+                allDeleted = false;
+            }
         }
         if (!allDeleted) {
             await new Promise((r) => setTimeout(r, 10));
