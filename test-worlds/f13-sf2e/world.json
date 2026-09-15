@@ -1,0 +1,17 @@
+{
+  "title": "F13 SF2E Incapacitation-Test",
+  "id": "incapacitation-test-f13-sf2e",
+  "system": "sf2e",
+  "joinTheme": "default",
+  "coreVersion": "13.351",
+  "compatibility": {
+    "minimum": "13",
+    "verified": "13.351"
+  },
+  "systemVersion": "0.0.11",
+  "lastPlayed": "Tue Sep 15 2026 11:04:59 GMT-0700 (Pacific Daylight Time)",
+  "playtime": 35615,
+  "safeMode": false,
+  "description": "",
+  "flags": {}
+}
