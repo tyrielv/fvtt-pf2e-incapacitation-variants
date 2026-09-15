@@ -1,9 +1,12 @@
-import { CheckPF2e, CheckRollCallback } from "@system/check/check";
-import { CheckModifier } from "@actor/modifiers";
-import { CheckCheckContext } from "@system/check/types";
-export const MODULENAME = "fvtt-pf2e-incapacitation-variants";
 import * as Settings from "./settings";
+
+import { CheckPF2e, CheckRollCallback } from "@system/check/check";
+
+import { CheckCheckContext } from "@system/check/types";
+import { CheckModifier } from "@actor/modifiers";
 import { runTests } from "./tests";
+
+export const MODULENAME = "fvtt-pf2e-incapacitation-variants";
 
 const logEnabled = true;
 
@@ -235,7 +238,7 @@ function giveBonusPerLevel(check: CheckModifier, context: CheckCheckContext) {
     }
     const effectLevel = getEffectLevel(context);
     const targetLevel = getTargetLevel(context);
-    if (effectLevel == undefined || targetLevel == undefined) {
+    if (effectLevel === undefined || targetLevel === undefined) {
         return;
     }
     const levelDifferenceBase = Settings.getRequiredLevelDifferenceSetting();
