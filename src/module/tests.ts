@@ -249,7 +249,7 @@ async function verifyRolls(toCheck: ChatMessagePF2e[], testName: string) {
     let anyFailed = false;
     for (let i = 0; i < toCheck.length; i++) {
         const m = toCheck[i];
-        if (m.actor!.name !== m.rolls[0].degreeOfSuccess) {
+        if (m.actor!.name !== m.rolls[0].degreeOfSuccess.toString()) {
             anyFailed = true;
             ui.notifications.error(`${testName} - ${m.token?.name} test failed`);
         } else {

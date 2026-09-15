@@ -1,0 +1,14 @@
+{
+  "title": "F12 PF2E Incapacitation-Test",
+  "id": "incapacitation-test-f12-pf2e",
+  "system": "pf2e",
+  "joinTheme": "default",
+  "coreVersion": "12.331",
+  "compatibility": {
+    "minimum": "12",
+    "verified": "12.331"
+  },
+  "systemVersion": "6.11.1",
+  "lastPlayed": "Sun Apr 13 2025 11:06:19 GMT-0700 (Pacific Daylight Time)",
+  "playtime": 35471
+}

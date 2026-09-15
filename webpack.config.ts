@@ -26,15 +26,16 @@ interface Configuration extends Omit<webpack.Configuration, "devServer"> {
     };
 }
 
-const [outDir, foundryUri] = ((): [string, string] => {
+const [outDir, worldsDir, foundryUri] = ((): [string, string | undefined, string] => {
     const configPath = path.resolve(process.cwd(), "foundryconfig.json");
     const config = fs.readJSONSync(configPath, { throws: false });
     const outDir =
         config instanceof Object
             ? path.join(config.dataPath, "Data", "modules", config.systemName ?? "fvtt-pf2e-incapacitation-variants")
             : path.join(__dirname, "dist/");
+    const worldsDir = config instanceof Object ? path.join(config.dataPath, "Data", "worlds") : undefined;
     const foundryUri = (config instanceof Object ? String(config.foundryUri) : "") ?? "http://localhost:30000";
-    return [outDir, foundryUri];
+    return [outDir, worldsDir, foundryUri];
 })();
 
 /** Create an empty static files when in dev mode to keep the Foundry server happy */
@@ -43,6 +44,31 @@ class EmptyStaticFilesPlugin {
         compiler.hooks.afterEmit.tap("EmptyStaticFilesPlugin", (): void => {
             if (!isProductionBuild) {
                 fs.closeSync(fs.openSync(path.resolve(outDir, "vendor.bundle.js"), "w"));
+            }
+        });
+    }
+}
+
+class CopyTestWorldsPlugin {
+    apply(compiler: webpack.Compiler): void {
+        compiler.hooks.afterEmit.tap("CopyTestWorldsPlugin", (): void => {
+            if (worldsDir) {
+                const testWorldsDir = path.resolve(__dirname, "test-worlds");
+                for (const entry of fs.readdirSync(testWorldsDir, { withFileTypes: true })) {
+                    if (!entry.isDirectory()) continue;
+
+                    const sourceDir = path.join(testWorldsDir, entry.name);
+                    const manifest = fs.readJSONSync(path.join(sourceDir, "world.json"));
+                    const worldId = manifest.id;
+                    if (typeof worldId !== "string" || !/^[a-z0-9][a-z0-9-]*$/.test(worldId)) {
+                        throw new Error(`Invalid or missing world id in ${entry.name}/world.json`);
+                    }
+
+                    const destinationDir = path.join(worldsDir, worldId);
+                    if (!fs.existsSync(destinationDir)) {
+                        fs.copySync(sourceDir, destinationDir);
+                    }
+                }
             }
         });
     }
@@ -157,6 +183,7 @@ const config: Configuration = {
         }),
         new SimpleProgressWebpackPlugin({ format: "compact" }),
         new EmptyStaticFilesPlugin(),
+        new CopyTestWorldsPlugin(),
     ],
     resolve: {
         alias: {

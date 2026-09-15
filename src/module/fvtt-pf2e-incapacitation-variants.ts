@@ -32,7 +32,7 @@ Hooks.once("ready", async () => {
 
 Hooks.once("pf2e.systemReady", async () => {
     wrap();
-    if (game.world.id === "incapacitation-test") {
+    if (game.world.id.startsWith("incapacitation-test")) {
         (window as any).testIncapacitationVariants = runTests;
     }
 });
