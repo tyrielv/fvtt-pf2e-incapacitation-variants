@@ -1,16 +1,18 @@
 //Adapted from https://github.com/xdy/xdy-pf2e-workbench/blob/main/webpack.config.ts
 
-import * as path from "path";
 import * as fs from "fs-extra";
 import * as os from "os";
-import webpack from "webpack";
-import { Configuration as WebpackDevServerConfiguration, Request } from "webpack-dev-server";
-import ForkTsCheckerWebpackPlugin from "fork-ts-checker-webpack-plugin";
-import TerserPlugin from "terser-webpack-plugin";
-// @ts-ignore
-import SimpleProgressWebpackPlugin from "simple-progress-webpack-plugin";
+import * as path from "path";
+
+import { Request, Configuration as WebpackDevServerConfiguration } from "webpack-dev-server";
+
 // @ts-ignore
 import CopyPlugin from "copy-webpack-plugin";
+import ForkTsCheckerWebpackPlugin from "fork-ts-checker-webpack-plugin";
+// @ts-ignore
+import SimpleProgressWebpackPlugin from "simple-progress-webpack-plugin";
+import TerserPlugin from "terser-webpack-plugin";
+import webpack from "webpack";
 
 const buildMode = process.argv[3] === "production" ? "production" : "development";
 const isProductionBuild = buildMode === "production";
