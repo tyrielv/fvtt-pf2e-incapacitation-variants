@@ -46,7 +46,7 @@ function wrap() {
             check: CheckModifier,
             context?: CheckCheckContext,
             event?: JQuery.TriggeredEvent | null,
-            callback?: CheckRollCallback
+            callback?: CheckRollCallback,
         ) => {
             return updateIncapacitation(original, check, context, event, callback);
         };
@@ -58,7 +58,7 @@ function updateIncapacitation(
     check: CheckModifier,
     context?: CheckCheckContext,
     event?: JQuery.TriggeredEvent | null,
-    callback?: CheckRollCallback
+    callback?: CheckRollCallback,
 ) {
     try {
         if (context && hasIncapacitationTrait(context)) {

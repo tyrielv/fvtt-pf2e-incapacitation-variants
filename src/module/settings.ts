@@ -8,7 +8,7 @@ export const Keys = {
     SpellEffectLevel: "SpellEffectLevel",
     IncapacitationEffect: "IncapacitationEffect",
     BonusAmount: "BonusAmount",
-}
+};
 
 export function registerSettings() {
     log("registerSettings");
@@ -74,8 +74,12 @@ export function registerSettings() {
         choices: {
             SlotLevel: game.i18n.localize(`${MODULENAME}.SETTINGS.${Keys.SpellEffectLevel}.SlotLevel`),
             CasterLevel: game.i18n.localize(`${MODULENAME}.SETTINGS.${Keys.SpellEffectLevel}.CasterLevel`),
-            BetterOfSlotLevelOrCasterLevel: game.i18n.localize(`${MODULENAME}.SETTINGS.${Keys.SpellEffectLevel}.BetterOfSlotLevelOrCasterLevel`),
-            SlotRankPlusHalfCasterLevel: game.i18n.localize(`${MODULENAME}.SETTINGS.${Keys.SpellEffectLevel}.SlotRankPlusHalfCasterLevel`)
+            BetterOfSlotLevelOrCasterLevel: game.i18n.localize(
+                `${MODULENAME}.SETTINGS.${Keys.SpellEffectLevel}.BetterOfSlotLevelOrCasterLevel`,
+            ),
+            SlotRankPlusHalfCasterLevel: game.i18n.localize(
+                `${MODULENAME}.SETTINGS.${Keys.SpellEffectLevel}.SlotRankPlusHalfCasterLevel`,
+            ),
         },
     });
 
@@ -89,12 +93,16 @@ export function registerSettings() {
         choices: {
             ImproveAllDOS: game.i18n.localize(`${MODULENAME}.SETTINGS.${Keys.IncapacitationEffect}.ImproveAllDOS`),
             ImproveWorstDOS: game.i18n.localize(`${MODULENAME}.SETTINGS.${Keys.IncapacitationEffect}.ImproveWorstDOS`),
-            ImproveWorst2DOS: game.i18n.localize(`${MODULENAME}.SETTINGS.${Keys.IncapacitationEffect}.ImproveWorst2DOS`),
+            ImproveWorst2DOS: game.i18n.localize(
+                `${MODULENAME}.SETTINGS.${Keys.IncapacitationEffect}.ImproveWorst2DOS`,
+            ),
             RollTwice: game.i18n.localize(`${MODULENAME}.SETTINGS.${Keys.IncapacitationEffect}.RollTwice`),
             GiveBonus: game.i18n.localize(`${MODULENAME}.SETTINGS.${Keys.IncapacitationEffect}.GiveBonus`),
-            GiveBonusPerLevelDifference: game.i18n.localize(`${MODULENAME}.SETTINGS.${Keys.IncapacitationEffect}.GiveBonusPerLevelDifference`),
+            GiveBonusPerLevelDifference: game.i18n.localize(
+                `${MODULENAME}.SETTINGS.${Keys.IncapacitationEffect}.GiveBonusPerLevelDifference`,
+            ),
             ScaleDOSImprovementsWithHP: game.i18n.localize(
-                `${MODULENAME}.SETTINGS.${Keys.IncapacitationEffect}.ScaleDOSImprovementsWithHP`
+                `${MODULENAME}.SETTINGS.${Keys.IncapacitationEffect}.ScaleDOSImprovementsWithHP`,
             ),
         },
     });
@@ -138,10 +146,7 @@ export function getTraitNameSetting() {
 }
 
 export type SpellEffectLevel =
-    | "SlotLevel"
-    | "CasterLevel"
-    | "BetterOfSlotLevelOrCasterLevel"
-    | "SlotRankPlusHalfCasterLevel";
+    "SlotLevel" | "CasterLevel" | "BetterOfSlotLevelOrCasterLevel" | "SlotRankPlusHalfCasterLevel";
 
 export type IncapacitationEffect =
     | "ImproveAllDOS"

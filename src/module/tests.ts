@@ -5,20 +5,24 @@ import { TokenPF2e } from "@module/canvas";
 
 const groupNumberEffectSourceId = "Item.BhX29Jk5Hod0IDpc";
 export async function runTests() {
-    const level1Message = game.messages.find(x => x.actor?.level === 1 && x.item?.name === "Charm")!;
+    const level1Message = game.messages.find((x) => x.actor?.level === 1 && x.item?.name === "Charm")!;
     if (level1Message == undefined) {
         ui.notifications.error("Cast charm from level 1 actor with rank 1 spell");
     }
 
-    function getRank(x:any) {
-        const y = x as { rank?: number};
+    function getRank(x: any) {
+        const y = x as { rank?: number };
         return y.rank ?? 0;
     }
-    const level11rank1Message = game.messages.find(x => x.actor?.level === 11 && x.item?.name === "Charm" && getRank(x.item) === 1)!;
+    const level11rank1Message = game.messages.find(
+        (x) => x.actor?.level === 11 && x.item?.name === "Charm" && getRank(x.item) === 1,
+    )!;
     if (level11rank1Message == undefined) {
         ui.notifications.error("Cast charm from level 11 actor with rank 1 spell");
     }
-    const level11rank3Message = game.messages.find(x => x.actor?.level === 11 && x.item?.name === "Charm" && getRank(x.item) === 3)!;
+    const level11rank3Message = game.messages.find(
+        (x) => x.actor?.level === 11 && x.item?.name === "Charm" && getRank(x.item) === 3,
+    )!;
     if (level11rank3Message == undefined) {
         ui.notifications.error("Cast charm from level 11 actor with rank 3 spell");
     }
@@ -26,106 +30,133 @@ export async function runTests() {
     await cleanUpRolls();
     await setConfigToDefaults();
 
-    var result = await runTestCase(1, level1Message, 'default');
-    if (!result) { return;}
+    var result = await runTestCase(1, level1Message, "default");
+    if (!result) {
+        return;
+    }
 
     await setConfigToDefaults();
     await game.settings.set(MODULENAME, Settings.Keys.HPThreshold, 50);
-    var result = await runTestCase(2, level1Message, 'HP Threshold 50');
-    if (!result) { return;}
+    var result = await runTestCase(2, level1Message, "HP Threshold 50");
+    if (!result) {
+        return;
+    }
 
     await setConfigToDefaults();
     await game.settings.set(MODULENAME, Settings.Keys.ApplicationBasis, "Trait");
-    var result = await runTestCase(3, level1Message, 'Boss trait');
-    if (!result) { return;}
+    var result = await runTestCase(3, level1Message, "Boss trait");
+    if (!result) {
+        return;
+    }
 
     await setConfigToDefaults();
     await game.settings.set(MODULENAME, Settings.Keys.RequiredLevelDifference, 5);
-    var result = await runTestCase(4, level1Message, 'Level difference 5');
-    if (!result) { return;}
+    var result = await runTestCase(4, level1Message, "Level difference 5");
+    if (!result) {
+        return;
+    }
 
     await setConfigToDefaults();
     await game.settings.set(MODULENAME, Settings.Keys.SpellEffectLevel, "CasterLevel");
-    var result = await runTestCase(5, level11rank1Message, 'Caster level 11');
-    if (!result) { return;}
+    var result = await runTestCase(5, level11rank1Message, "Caster level 11");
+    if (!result) {
+        return;
+    }
 
     await setConfigToDefaults();
     await game.settings.set(MODULENAME, Settings.Keys.SpellEffectLevel, "CasterLevel");
-    var result = await runTestCase(6, level1Message, 'Caster level 1');
-    if (!result) { return;}
+    var result = await runTestCase(6, level1Message, "Caster level 1");
+    if (!result) {
+        return;
+    }
 
     await setConfigToDefaults();
-    await game.settings.set(MODULENAME, Settings.Keys.SpellEffectLevel, "BetterOfSlotLevelOrCasterLevel")
-    var result = await runTestCase(7, level11rank1Message, 'Caster level 11 better of level/2xrank');
-    if (!result) { return;}
+    await game.settings.set(MODULENAME, Settings.Keys.SpellEffectLevel, "BetterOfSlotLevelOrCasterLevel");
+    var result = await runTestCase(7, level11rank1Message, "Caster level 11 better of level/2xrank");
+    if (!result) {
+        return;
+    }
 
     await setConfigToDefaults();
-    await game.settings.set(MODULENAME, Settings.Keys.SpellEffectLevel, "BetterOfSlotLevelOrCasterLevel")
-    var result = await runTestCase(8, level1Message, 'Caster level 1 better of level/2xrank');
-    if (!result) { return;}
+    await game.settings.set(MODULENAME, Settings.Keys.SpellEffectLevel, "BetterOfSlotLevelOrCasterLevel");
+    var result = await runTestCase(8, level1Message, "Caster level 1 better of level/2xrank");
+    if (!result) {
+        return;
+    }
 
     await setConfigToDefaults();
     await game.settings.set(MODULENAME, Settings.Keys.IncapacitationEffect, "ImproveWorstDOS");
-    var result = await runTestCase(9, level1Message, 'Improve crit fails only');
-    if (!result) { return;}
+    var result = await runTestCase(9, level1Message, "Improve crit fails only");
+    if (!result) {
+        return;
+    }
 
     await setConfigToDefaults();
     await game.settings.set(MODULENAME, Settings.Keys.IncapacitationEffect, "ImproveWorst2DOS");
-    var result = await runTestCase(10, level1Message, 'Improve fails');
-    if (!result) { return;}
+    var result = await runTestCase(10, level1Message, "Improve fails");
+    if (!result) {
+        return;
+    }
 
     await setConfigToDefaults();
     await game.settings.set(MODULENAME, Settings.Keys.IncapacitationEffect, "GiveBonus");
     await game.settings.set(MODULENAME, Settings.Keys.BonusAmount, 1);
-    var result = await runTestCase(11, level1Message, 'Add a bonus(1)');
-    if (!result) { return;}
+    var result = await runTestCase(11, level1Message, "Add a bonus(1)");
+    if (!result) {
+        return;
+    }
 
     await setConfigToDefaults();
     await game.settings.set(MODULENAME, Settings.Keys.IncapacitationEffect, "ScaleDOSImprovementsWithHP");
-    var result = await runTestCase(12, level1Message, 'Scale with HP');
-    if (!result) { return;}
+    var result = await runTestCase(12, level1Message, "Scale with HP");
+    if (!result) {
+        return;
+    }
 
     await setConfigToDefaults();
     await game.settings.set(MODULENAME, Settings.Keys.IncapacitationEffect, "RollTwice");
     var result = await runTestCaseRollTwiceKeepHigher(13, level1Message);
-    if (!result) { return;}
+    if (!result) {
+        return;
+    }
 
     await setConfigToDefaults();
     await game.settings.set(MODULENAME, Settings.Keys.SpellEffectLevel, "SlotRankPlusHalfCasterLevel");
-    var result = await runTestCase(14, level11rank3Message, 'Half level plus rank');
-    if (!result) { return;}
+    var result = await runTestCase(14, level11rank3Message, "Half level plus rank");
+    if (!result) {
+        return;
+    }
 
     await setConfigToDefaults();
     await game.settings.set(MODULENAME, Settings.Keys.IncapacitationEffect, "GiveBonusPerLevelDifference");
     await game.settings.set(MODULENAME, Settings.Keys.BonusAmount, 2);
     await game.settings.set(MODULENAME, Settings.Keys.SpellEffectLevel, "CasterLevel");
-    var result = await runTestCase(15, level1Message, 'BonusPerLevelDifference');
-    if (!result) { return;}
-
+    var result = await runTestCase(15, level1Message, "BonusPerLevelDifference");
+    if (!result) {
+        return;
+    }
 
     ui.notifications.info(`All passed`);
     await setConfigToDefaults();
 }
 
-async function runTestCaseRollTwiceKeepHigher(groupNumber: number, message: ChatMessagePF2e)
-{
+async function runTestCaseRollTwiceKeepHigher(groupNumber: number, message: ChatMessagePF2e) {
     const tokens = selectTokensWithGroupNumber(groupNumber);
     await clickSaveButton(message!, tokens);
-    let toCheck = Array.from(game.messages).filter(x => x.isRoll);
+    const toCheck = Array.from(game.messages).filter((x) => x.isRoll);
     if (toCheck.length != tokens.length) {
         ui.notifications.error("Number of rolls didn't match number of tokens");
     }
     let anyFailed = false;
     for (let i = 0; i < toCheck.length; i++) {
-        let m = toCheck[i];
+        const m = toCheck[i];
         if (m.token?.name === "Normal crit success") {
-            if (m.rolls[0].formula.indexOf('kh') >= 0) {
+            if (m.rolls[0].formula.indexOf("kh") >= 0) {
                 anyFailed = true;
                 ui.notifications.error(`Roll twice keep higher - ${m.token?.name} test failed`);
             }
-        }
-        else {
-            if (m.rolls[0].formula.indexOf('kh') < 0) {
+        } else {
+            if (m.rolls[0].formula.indexOf("kh") < 0) {
                 anyFailed = true;
                 ui.notifications.error(`Roll twice keep higher - ${m.token?.name} test failed`);
             }
@@ -141,14 +172,13 @@ async function runTestCaseRollTwiceKeepHigher(groupNumber: number, message: Chat
     return true;
 }
 
-async function runTestCase(groupNumber: number, message: ChatMessagePF2e, name: string)
-{
-    const tokens = selectTokensWithGroupNumber(groupNumber)
+async function runTestCase(groupNumber: number, message: ChatMessagePF2e, name: string) {
+    const tokens = selectTokensWithGroupNumber(groupNumber);
     const rolls = await clickSaveButton(message!, tokens);
     if (rolls.length != tokens.length) {
         ui.notifications.error("Number of rolls didn't match number of tokens");
     }
-    let result = await verifyRolls(rolls, name);
+    const result = await verifyRolls(rolls, name);
     return result;
 }
 
@@ -163,8 +193,8 @@ async function setConfigToDefaults() {
 }
 
 async function clickSaveButton(message: ChatMessagePF2e, tokens: TokenPF2e[]) {
-    const messageNode = document.querySelector(`[data-message-id="${message.id}"]`)
-    const button = messageNode?.querySelector('button')!;
+    const messageNode = document.querySelector(`[data-message-id="${message.id}"]`);
+    const button = messageNode?.querySelector("button")!;
     return await checkIfDoneRolling(button, tokens);
 }
 
@@ -174,12 +204,11 @@ async function checkIfDoneRolling(button: HTMLButtonElement, tokens: TokenPF2e[]
         if (tokens.length == 0) {
             throw "Expected some controlled tokens, but none were selected";
         }
-        const missing = tokens.filter(t => game.messages.find(m => m.token?.id === t.id) == undefined);
+        const missing = tokens.filter((t) => game.messages.find((m) => m.token?.id === t.id) == undefined);
         if (missing.length > 0) {
-            await new Promise(r => setTimeout(r, 10));
-        }
-        else {
-            return game.messages.filter(m => tokens.find(t => m.token?.id === t.id) != undefined);
+            await new Promise((r) => setTimeout(r, 10));
+        } else {
+            return game.messages.filter((m) => tokens.find((t) => m.token?.id === t.id) != undefined);
         }
     }
 }
@@ -192,13 +221,13 @@ function selectTokensWithGroupNumber(groupNumber: number) {
 
 function selectTokens(tokens: TokenPF2e[]) {
     canvas.tokens.releaseAll();
-    tokens.forEach(t => t.control({ releaseOthers: false }));
+    tokens.forEach((t) => t.control({ releaseOthers: false }));
 }
 
 function getTokensWithGroupNumber(groupNumber: number) {
     const tokens = canvas.tokens.objects.children as TokenPF2e[];
-    return tokens.filter(t => {
-        const matches = t.actor?.items.filter(i => {
+    return tokens.filter((t) => {
+        const matches = t.actor?.items.filter((i) => {
             if (i.sourceId != groupNumberEffectSourceId) {
                 return false;
             }
@@ -215,12 +244,11 @@ function getTokensWithGroupNumber(groupNumber: number) {
 async function verifyRolls(toCheck: ChatMessagePF2e[], testName: string) {
     let anyFailed = false;
     for (let i = 0; i < toCheck.length; i++) {
-        let m = toCheck[i];
+        const m = toCheck[i];
         if (m.actor!.name != m.rolls[0].degreeOfSuccess) {
             anyFailed = true;
             ui.notifications.error(`${testName} - ${m.token?.name} test failed`);
-        }
-        else {
+        } else {
             await m.delete();
         }
     }
@@ -244,21 +272,21 @@ async function waitForMessagesToBeDeleted(toCheck: ChatMessagePF2e[]) {
             }
         }
         if (!allDeleted) {
-            await new Promise(r => setTimeout(r, 10));
+            await new Promise((r) => setTimeout(r, 10));
         }
     }
 }
 
 async function cleanUpRolls() {
-    let toCheck = Array.from(game.messages).filter(x => x.isRoll)
+    const toCheck = Array.from(game.messages).filter((x) => x.isRoll);
     for (let i = 0; i < toCheck.length; i++) {
-        let m = toCheck[i];
+        const m = toCheck[i];
         await m.delete();
     }
     for (let i = 0; i < toCheck.length; i++) {
-        let m = toCheck[i];
+        const m = toCheck[i];
         while (document.querySelector(`[data-message-id="${m.id}"]`)) {
-            await new Promise(r => setTimeout(r, 10));
+            await new Promise((r) => setTimeout(r, 10));
         }
     }
 }
