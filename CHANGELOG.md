@@ -1,3 +1,10 @@
+# [1.5.0](https://github.com/tyrielv/fvtt-pf2e-incapacitation-variants/compare/v1.4.1...v1.5.0) (2026-10-29)
+
+
+### Features
+
+* Add a configurable maximum to bonus when the bonus scales with level ([3a38fcf](https://github.com/tyrielv/fvtt-pf2e-incapacitation-variants/commit/3a38fcfeb061c8fc8978712b27b4f462eb717637))
+
 ## [1.4.1](https://github.com/tyrielv/fvtt-pf2e-incapacitation-variants/compare/v1.4.0...v1.4.1) (2026-09-15)
 
 
