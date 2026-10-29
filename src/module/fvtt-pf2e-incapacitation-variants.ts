@@ -233,6 +233,7 @@ function giveBonus(check: CheckModifier, context: CheckCheckContext) {
 
 function giveBonusPerLevel(check: CheckModifier, context: CheckCheckContext) {
     let bonus = Settings.getBonusAmountSetting();
+    const bonusCap = Settings.getBonusCapSetting();
     if (!isSavingThrow(context)) {
         bonus = -bonus;
     }
@@ -246,6 +247,9 @@ function giveBonusPerLevel(check: CheckModifier, context: CheckCheckContext) {
     const differenceAboveBase = targetLevel - (effectLevel + (levelDifferenceBase - 1));
     if (differenceAboveBase > 0) {
         bonus *= differenceAboveBase;
+        if (bonusCap !== undefined) {
+            bonus = Math.min(bonus, bonusCap);
+        }
         const modifier = new game.pf2e.Modifier({
             label: "PF2E.TraitIncapacitation",
             type: "untyped",

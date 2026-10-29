@@ -8,6 +8,7 @@ export const Keys = {
     SpellEffectLevel: "SpellEffectLevel",
     IncapacitationEffect: "IncapacitationEffect",
     BonusAmount: "BonusAmount",
+    BonusCap: "BonusCap",
 };
 
 export function registerSettings() {
@@ -115,6 +116,14 @@ export function registerSettings() {
         default: 5,
         type: Number,
     });
+    game.settings.register(MODULENAME, Keys.BonusCap, {
+        name: `${MODULENAME}.SETTINGS.${Keys.BonusCap}.name`,
+        hint: `${MODULENAME}.SETTINGS.${Keys.BonusCap}.hint`,
+        scope: "world",
+        config: true,
+        default: 10,
+        type: Number,
+    });
 }
 
 export function getSpellEffectLevelSetting(): SpellEffectLevel {
@@ -135,6 +144,10 @@ export function getApplicationBasisSetting(): ApplicationBasis {
 
 export function getBonusAmountSetting(): number {
     return game.settings.get(MODULENAME, Keys.BonusAmount) as number;
+}
+
+export function getBonusCapSetting(): number {
+    return game.settings.get(MODULENAME, Keys.BonusCap) as number;
 }
 
 export function getHpThreshold(): number {

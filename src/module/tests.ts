@@ -131,6 +131,7 @@ export async function runTests() {
     await setConfigToDefaults();
     await game.settings.set(MODULENAME, Settings.Keys.IncapacitationEffect, "GiveBonusPerLevelDifference");
     await game.settings.set(MODULENAME, Settings.Keys.BonusAmount, 2);
+    await game.settings.set(MODULENAME, Settings.Keys.BonusCap, 4);
     await game.settings.set(MODULENAME, Settings.Keys.SpellEffectLevel, "CasterLevel");
     result = await runTestCase(15, level1Message, "BonusPerLevelDifference");
     if (!result) {
@@ -191,6 +192,7 @@ async function setConfigToDefaults() {
     await game.settings.set(MODULENAME, Settings.Keys.SpellEffectLevel, "SlotLevel");
     await game.settings.set(MODULENAME, Settings.Keys.IncapacitationEffect, "ImproveAllDOS");
     await game.settings.set(MODULENAME, Settings.Keys.BonusAmount, 5);
+    await game.settings.set(MODULENAME, Settings.Keys.BonusCap, 10);
 }
 
 async function clickSaveButton(message: ChatMessagePF2e, tokens: TokenPF2e[]) {
