@@ -62,7 +62,7 @@
     "ts-node": "^10.9.2",
     "typedoc": "^0.28.20",
     "webpack-cli": "^7.2.3",
-    "webpack-dev-server": "^6.0.0",
+    "webpack-dev-server": "^6.1.0",
     "webpack-import-glob-loader": "^1.6.3"
   }
 }
